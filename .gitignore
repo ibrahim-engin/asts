@@ -25,6 +25,10 @@ public/uploads/*
 !public/uploads/profiles/.gitkeep
 !public/uploads/medical/.gitkeep
 
+#Diğer Sayfalar
+*.html
+*.php
+
 # Veritabanı yedekleri
 backup/
 
