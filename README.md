@@ -25,7 +25,7 @@ Aile Sağlık Takip Sistemi (ASTS), ailelerin sağlık verilerini takip edebilec
 
 1. Projeyi klonlayın:
    ```bash
-   git clone https://github.com/urartechdev/asts.git
+   git clone https://github.com/ibrahim-engin/asts.git
    cd asts
    ```
 
@@ -216,4 +216,4 @@ MIT
 
 ## İletişim
 
-Projeyle ilgili sorularınız veya önerileriniz varsa, lütfen [burada](https://github.com/urartechdev/asts/issues) bir konu açın.
+Projeyle ilgili sorularınız veya önerileriniz varsa, lütfen [burada](https://github.com/ibrahim-engin/asts/issues) bir konu açın.
