@@ -400,4 +400,221 @@ exports.getDashboardData = async (req, res) => {
             ? parseFloat((values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)) 
             : null,
           fastingAverage: fastingValues.length > 0 
-            ? parseFloat((fastingValues.reduce((a, b) => a + b,
+            ? parseFloat((fastingValues.reduce((a, b) => a + b, 0) / fastingValues.length).toFixed(1)) 
+            : null,
+          postprandialAverage: postprandialValues.length > 0 
+            ? parseFloat((postprandialValues.reduce((a, b) => a + b, 0) / postprandialValues.length).toFixed(1)) 
+            : null,
+          min: values.length > 0 ? Math.min(...values) : null,
+          max: values.length > 0 ? Math.max(...values) : null,
+          criticalCount: data.filter(item => item.status === 'critical').length,
+          warningCount: data.filter(item => item.status === 'warning').length,
+          normalCount: data.filter(item => item.status === 'normal').length
+        };
+      }
+      
+      if (type === 'bloodPressure') {
+        const systolicValues = data.map(item => item.bloodPressure.systolic);
+        const diastolicValues = data.map(item => item.bloodPressure.diastolic);
+        
+        return {
+          systolicAverage: systolicValues.length > 0 
+            ? parseFloat((systolicValues.reduce((a, b) => a + b, 0) / systolicValues.length).toFixed(1)) 
+            : null,
+          diastolicAverage: diastolicValues.length > 0 
+            ? parseFloat((diastolicValues.reduce((a, b) => a + b, 0) / diastolicValues.length).toFixed(1)) 
+            : null,
+          systolicMin: systolicValues.length > 0 ? Math.min(...systolicValues) : null,
+          systolicMax: systolicValues.length > 0 ? Math.max(...systolicValues) : null,
+          diastolicMin: diastolicValues.length > 0 ? Math.min(...diastolicValues) : null,
+          diastolicMax: diastolicValues.length > 0 ? Math.max(...diastolicValues) : null,
+          criticalCount: data.filter(item => item.status === 'critical').length,
+          warningCount: data.filter(item => item.status === 'warning').length,
+          normalCount: data.filter(item => item.status === 'normal').length
+        };
+      }
+      
+      if (type === 'heartRate') {
+        const values = data.map(item => item.heartRate.value);
+        
+        return {
+          average: values.length > 0 
+            ? parseFloat((values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)) 
+            : null,
+          min: values.length > 0 ? Math.min(...values) : null,
+          max: values.length > 0 ? Math.max(...values) : null,
+          criticalCount: data.filter(item => item.status === 'critical').length,
+          warningCount: data.filter(item => item.status === 'warning').length,
+          normalCount: data.filter(item => item.status === 'normal').length
+        };
+      }
+      
+      if (type === 'weight') {
+        const values = data.map(item => item.weight.value);
+        
+        // Başlangıç ve bitiş ağırlıkları
+        const startWeight = data.length > 0 ? data[0].weight.value : null;
+        const endWeight = data.length > 0 ? data[data.length - 1].weight.value : null;
+        
+        // Değişim miktarı
+        const change = startWeight && endWeight 
+          ? parseFloat((endWeight - startWeight).toFixed(1)) 
+          : null;
+        
+        // Değişim yüzdesi
+        const percentChange = startWeight && endWeight && startWeight !== 0 
+          ? parseFloat(((endWeight - startWeight) / startWeight * 100).toFixed(1)) 
+          : null;
+        
+        return {
+          average: values.length > 0 
+            ? parseFloat((values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)) 
+            : null,
+          min: values.length > 0 ? Math.min(...values) : null,
+          max: values.length > 0 ? Math.max(...values) : null,
+          start: startWeight,
+          end: endWeight,
+          change,
+          percentChange
+        };
+      }
+      
+      return null;
+    };
+    
+    // İstatistikleri hesapla
+    const stats = {
+      bloodSugar: calculateStats(bloodSugarData, 'bloodSugar'),
+      bloodPressure: calculateStats(bloodPressureData, 'bloodPressure'),
+      heartRate: calculateStats(heartRateData, 'heartRate'),
+      weight: calculateStats(weightData, 'weight')
+    };
+    
+    // Aktivite istatistikleri
+    const activityStats = activities.length > 0 ? {
+      totalCount: activities.length,
+      totalDuration: activities.reduce((sum, activity) => sum + (activity.duration || 0), 0),
+      totalCalories: activities.reduce((sum, activity) => sum + (activity.calories || 0), 0),
+      totalDistance: activities
+        .filter(activity => activity.distance && activity.distance.value)
+        .reduce((sum, activity) => {
+          let value = activity.distance.value;
+          
+          // Birim dönüşümü (her şeyi km'ye çevir)
+          if (activity.distance.unit === 'm') {
+            value = value / 1000;
+          } else if (activity.distance.unit === 'mil') {
+            value = value * 1.60934;
+          }
+          
+          return sum + value;
+        }, 0),
+      byType: Object.entries(
+        activities.reduce((acc, activity) => {
+          if (!acc[activity.activityType]) {
+            acc[activity.activityType] = { count: 0, duration: 0, calories: 0 };
+          }
+          
+          acc[activity.activityType].count++;
+          acc[activity.activityType].duration += activity.duration || 0;
+          acc[activity.activityType].calories += activity.calories || 0;
+          
+          return acc;
+        }, {})
+      ).map(([type, data]) => ({ type, ...data }))
+    } : null;
+    
+    // Beslenme istatistikleri
+    const nutritionStats = nutritionData.length > 0 ? {
+      totalCount: nutritionData.length,
+      averageCalories: parseFloat(
+        (nutritionData.reduce((sum, item) => sum + (item.totalNutritionalValues.calories || 0), 0) / nutritionData.length).toFixed(1)
+      ),
+      totalCalories: nutritionData.reduce((sum, item) => sum + (item.totalNutritionalValues.calories || 0), 0),
+      byMealType: Object.entries(
+        nutritionData.reduce((acc, item) => {
+          if (!acc[item.mealType]) {
+            acc[item.mealType] = { 
+              count: 0, 
+              calories: 0,
+              carbs: 0,
+              proteins: 0,
+              fats: 0 
+            };
+          }
+          
+          acc[item.mealType].count++;
+          acc[item.mealType].calories += item.totalNutritionalValues.calories || 0;
+          acc[item.mealType].carbs += item.totalNutritionalValues.carbs || 0;
+          acc[item.mealType].proteins += item.totalNutritionalValues.proteins || 0;
+          acc[item.mealType].fats += item.totalNutritionalValues.fats || 0;
+          
+          return acc;
+        }, {})
+      ).map(([type, data]) => ({ type, ...data }))
+    } : null;
+    
+    // İlaç istatistikleri
+    const medicationStats = medications.length > 0 ? {
+      totalCount: medications.length,
+      activeCount: medications.filter(med => med.isActive).length,
+      criticalCount: medications.filter(med => med.isCritical).length,
+      regularCount: medications.filter(med => med.isRegular).length,
+      adherenceRates: await Promise.all(
+        medications.map(async medication => {
+          const adherence = await medication.checkMedicationStatus();
+          return {
+            id: medication._id,
+            name: medication.name,
+            adherenceRate: adherence.adherenceRate || 0,
+            missedDoses: adherence.missedDoses || 0,
+            totalDoses: adherence.totalDoses || 0
+          };
+        })
+      )
+    } : null;
+    
+    // Tüm verileri API yanıtı olarak döndür
+    res.json({
+      success: true,
+      data: {
+        familyMember: {
+          id: familyMember._id,
+          name: familyMember.name,
+          surname: familyMember.surname,
+          relationship: familyMember.relationship,
+          age: familyMember.age,
+          gender: familyMember.gender,
+          bmi: familyMember.bmi
+        },
+        recentHealthData: recentHealthData.map(data => ({
+          id: data._id,
+          type: data.dataType,
+          value: data.getValue(),
+          unit: data.getUnit(),
+          measuredAt: data.measuredAt,
+          status: data.status
+        })),
+        stats,
+        activityStats,
+        nutritionStats,
+        medicationStats,
+        chartData: {
+          bloodSugar: formatData(bloodSugarData, 'bloodSugar'),
+          bloodPressure: formatData(bloodPressureData, 'bloodPressure'),
+          heartRate: formatData(heartRateData, 'heartRate'),
+          weight: formatData(weightData, 'weight')
+        }
+      }
+    });
+  } catch (error) {
+    logError(error, req);
+    
+    res.status(500).json({
+      success: false,
+      error: 'Dashboard verileri alınırken bir hata oluştu'
+    });
+  }
+};
+
+module.exports = exports;

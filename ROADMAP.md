@@ -36,15 +36,17 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] multer.js - Dosya yükleme middleware
 - [x] validators.js - Veri doğrulama middleware
 
+### Controller Dosyaları
+- [x] adminController.js - Admin paneli yönetimi
+- [x] authController.js - Kimlik doğrulama işlemleri
+- [x] dashboardController.js - Panel verilerinin kontrolü
+- [x] healthDataController.js - Sağlık verilerinin yönetimi
+- [x] medicationController.js - İlaç takibi yönetimi
+- [x] medicalHistoryController.js - Tıbbi geçmiş yönetimi
+
 ## 🟡 Devam Eden Görevler
 
 ### Controller Dosyaları
-- [ ] adminController.js - Admin paneli yönetimi
-- [ ] authController.js - Kimlik doğrulama işlemleri
-- [ ] dashboardController.js - Panel verilerinin kontrolü
-- [ ] healthDataController.js - Sağlık verilerinin yönetimi
-- [ ] medicationController.js - İlaç takibi yönetimi
-- [ ] medicalHistoryController.js - Tıbbi geçmiş yönetimi
 - [ ] nutritionController.js - Beslenme verilerinin yönetimi
 - [ ] physicalActivityController.js - Fiziksel aktivite verilerinin yönetimi
 - [ ] reminderController.js - Hatırlatıcıların yönetimi
