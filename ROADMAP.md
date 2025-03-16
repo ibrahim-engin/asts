@@ -4,6 +4,8 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 
 ## 🟢 Tamamlanan Görevler
 
+## ⚫ Back-End (Sistem ve Ana Altyapı Dosyaları)
+
 ### Proje Yapısı ve Temel Dosyalar
 - [x] Proje mimarisi ve dosya yapısı tasarımı
 - [x] README.md dosyası oluşturma
@@ -75,14 +77,12 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] constants.js - Sabit değerler
 - [x] dateHelper.js - Tarih yardımcı fonksiyonları
 - [x] dbConnection.js - Veritabanı bağlantı yönetimi
+- [x] healthCalculator.js - Sağlık hesaplamaları
+- [x] logger.js - Loglama yardımcıları
+- [x] validators.js - Doğrulama yardımcıları
+- [x] dbSeeder.js - Veritabanı başlangıç verileri
 
 ## 🟡 Devam Eden Görevler
-
-### Utility Dosyaları
-- [ ] healthCalculator.js - Sağlık hesaplamaları
-- [ ] logger.js - Loglama yardımcıları
-- [ ] validators.js - Doğrulama yardımcıları
-- [ ] dbSeeder.js - Veritabanı başlangıç verileri
 
 ## 🔴 Frontend (EJS Şablonları)
 
@@ -176,6 +176,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **16 Mart 2025** - Controller Dosyaları oluşturuldu.
 - **16 Mart 2025** - Routes Dosyaları oluşturuldu.
 - **16 Mart 2025** - Servis Dosyaları oluşturuldu.
+- **16 Mart 2025** - Utilty Dosyaları oluşturuldu.
 
 ---
 

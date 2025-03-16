@@ -652,27 +652,262 @@ const calculateSpeed = (distance, duration) => {
  * @returns {Object} Toplam besin değerleri
  */
 const calculateTotalNutrients = (foods) => {
-  try {
-    if (!foods || !Array.isArray(foods) || foods.length === 0) {
+    try {
+      if (!foods || !Array.isArray(foods) || foods.length === 0) {
+        return null;
+      }
+      
+      // Başlangıç değerleri
+      const totals = {
+        calories: 0,
+        carbs: 0,
+        proteins: 0,
+        fats: 0,
+        fiber: 0,
+        sugar: 0,
+        sodium: 0
+      };
+      
+      // Her besin için değerleri topla
+      foods.forEach(food => {
+        if (food.nutritionalValues) {
+          totals.calories += food.nutritionalValues.calories || 0;
+          totals.carbs += food.nutritionalValues.carbs || 0;
+          totals.proteins += food.nutritionalValues.proteins || 0;
+          totals.fats += food.nutritionalValues.fats || 0;
+          totals.fiber += food.nutritionalValues.fiber || 0;
+          totals.sugar += food.nutritionalValues.sugar || 0;
+          totals.sodium += food.nutritionalValues.sodium || 0;
+        }
+      });
+      
+      // Ondalıklı sayıları yuvarla
+      return {
+        calories: Math.round(totals.calories),
+        carbs: parseFloat(totals.carbs.toFixed(1)),
+        proteins: parseFloat(totals.proteins.toFixed(1)),
+        fats: parseFloat(totals.fats.toFixed(1)),
+        fiber: parseFloat(totals.fiber.toFixed(1)),
+        sugar: parseFloat(totals.sugar.toFixed(1)),
+        sodium: Math.round(totals.sodium)
+      };
+    } catch (error) {
+      logError('Toplam besin değerleri hesaplanamadı', error);
       return null;
     }
+  };
+  
+  /**
+   * İlaç uyum oranını hesaplar
+   * @param {Array} logs - İlaç kullanım kayıtları
+   * @param {Array} schedules - İlaç kullanım programı
+   * @param {Date} startDate - Başlangıç tarihi
+   * @param {Date} endDate - Bitiş tarihi (varsayılan: şimdi)
+   * @returns {Object} Uyum oranı bilgileri
+   */
+  const calculateMedicationAdherence = (logs, schedules, startDate, endDate = new Date()) => {
+    try {
+      if (!logs || !schedules || !Array.isArray(logs) || !Array.isArray(schedules) || !startDate) {
+        return null;
+      }
+      
+      // Toplam planlanan doz sayısı
+      let totalScheduled = 0;
+      
+      // Toplam alınan doz sayısı
+      let totalTaken = 0;
+      
+      // Gecikmiş doz sayısı
+      let delayedCount = 0;
+      
+      // Tarih aralığındaki günleri kontrol et
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      
+      // Her gün için
+      const currentDate = new Date(start);
+      while (currentDate <= end) {
+        // Bu gün için programlanmış dozları bul
+        schedules.forEach(schedule => {
+          if (isScheduledForDay(schedule, currentDate)) {
+            totalScheduled++;
+            
+            // Bu doz için bir kayıt var mı?
+            const log = logs.find(log => 
+              isSameDay(new Date(log.takenAt), currentDate) && 
+              isSameTime(log.scheduledTime, schedule.time)
+            );
+            
+            if (log) {
+              totalTaken++;
+              
+              // Gecikmeli alındı mı?
+              if (log.delayedMinutes && log.delayedMinutes > 30) {
+                delayedCount++;
+              }
+            }
+          }
+        });
+        
+        // Sonraki güne geç
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      // Uyum oranı hesapla
+      const adherenceRate = totalScheduled > 0 ? (totalTaken / totalScheduled) * 100 : 0;
+      
+      return {
+        totalScheduled,
+        totalTaken,
+        missedDoses: totalScheduled - totalTaken,
+        delayedDoses: delayedCount,
+        adherenceRate: parseFloat(adherenceRate.toFixed(1)),
+        status: getAdherenceStatus(adherenceRate)
+      };
+    } catch (error) {
+      logError('İlaç uyum oranı hesaplanamadı', error);
+      return null;
+    }
+  };
+  
+  /**
+   * İlaç uyum oranı durumunu döndürür
+   * @param {number} rate - Uyum oranı
+   * @returns {string} Durum
+   */
+  const getAdherenceStatus = (rate) => {
+    if (rate >= 90) {
+      return 'excellent'; // Mükemmel
+    } else if (rate >= 80) {
+      return 'good'; // İyi
+    } else if (rate >= 70) {
+      return 'moderate'; // Orta
+    } else if (rate >= 50) {
+      return 'poor'; // Zayıf
+    } else {
+      return 'critical'; // Kritik
+    }
+  };
+  
+  /**
+   * İlaç programı o gün için geçerli mi kontrol eder
+   * @param {Object} schedule - İlaç programı
+   * @param {Date} date - Kontrol edilecek tarih
+   * @returns {boolean} Geçerli ise true
+   */
+  const isScheduledForDay = (schedule, date) => {
+    // Program aktif mi?
+    if (!schedule.active) {
+      return false;
+    }
     
-    // Başlangıç değerleri
-    const totals = {
-      calories: 0,
-      carbs: 0,
-      proteins: 0,
-      fats: 0,
-      fiber: 0,
-      sugar: 0,
-      sodium: 0
-    };
+    const day = date.getDay(); // 0: Pazar, 1: Pazartesi, ...
+    const dayNames = ['pazar', 'pazartesi', 'salı', 'çarşamba', 'perşembe', 'cuma', 'cumartesi'];
     
-    // Her besin için değerleri topla
-    foods.forEach(food => {
-      if (food.nutritionalValues) {
-        totals.calories += food.nutritionalValues.calories || 0;
-        totals.carbs += food.nutritionalValues.carbs || 0;
-        totals.proteins += food.nutritionalValues.proteins || 0;
-        totals.fats += food.nutritionalValues.fats || 0;
-        totals.fiber += food.nutritionalValues.fiber ||
+    // Frekans kontrolü
+    if (schedule.frequency === 'daily') {
+      // Her gün
+      return true;
+    } else if (schedule.frequency === 'weekly' && schedule.daysOfWeek) {
+      // Haftanın belirli günleri
+      return schedule.daysOfWeek.includes(dayNames[day]);
+    } else if (schedule.frequency === 'monthly' && schedule.daysOfMonth) {
+      // Ayın belirli günleri
+      return schedule.daysOfMonth.includes(date.getDate());
+    } else if (schedule.frequency === 'custom' && schedule.customInterval) {
+      // Özel aralık
+      const startDate = new Date(schedule.startDate);
+      const diffTime = Math.abs(date - startDate);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Gün biriminde aralık
+      if (schedule.customInterval.unit === 'gün') {
+        return diffDays % schedule.customInterval.value === 0;
+      }
+      
+      // Hafta biriminde aralık
+      if (schedule.customInterval.unit === 'hafta') {
+        return diffDays % (schedule.customInterval.value * 7) === 0;
+      }
+      
+      // Ay biriminde aralık
+      if (schedule.customInterval.unit === 'ay') {
+        return date.getDate() === startDate.getDate();
+      }
+    }
+    
+    return false;
+  };
+  
+  /**
+   * İki tarihin aynı gün olup olmadığını kontrol eder
+   * @param {Date} date1 - İlk tarih
+   * @param {Date} date2 - İkinci tarih
+   * @returns {boolean} Aynı gün ise true
+   */
+  const isSameDay = (date1, date2) => {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+  };
+  
+  /**
+   * İki saat aynı mı kontrol eder
+   * @param {string} time1 - İlk saat (HH:MM)
+   * @param {string} time2 - İkinci saat (HH:MM)
+   * @returns {boolean} Aynı saat ise true
+   */
+  const isSameTime = (time1, time2) => {
+    if (!time1 || !time2) {
+      return false;
+    }
+    
+    return time1 === time2;
+  };
+  
+  /**
+   * İki tarih arasındaki gün farkını hesaplar
+   * @param {Date} date1 - İlk tarih
+   * @param {Date} date2 - İkinci tarih
+   * @returns {number} Gün farkı
+   */
+  const daysBetween = (date1, date2) => {
+    const oneDay = 24 * 60 * 60 * 1000; // milisaniye cinsinden bir gün
+    const firstDate = new Date(date1);
+    const secondDate = new Date(date2);
+    
+    // Her iki tarihi de gün başına sıfırla
+    firstDate.setHours(0, 0, 0, 0);
+    secondDate.setHours(0, 0, 0, 0);
+    
+    // Gün farkını hesapla
+    return Math.round(Math.abs((firstDate - secondDate) / oneDay));
+  };
+  
+  module.exports = {
+    calculateBMI,
+    getBMICategory,
+    getBMICategoryName,
+    calculateIdealWeight,
+    calculateBMR,
+    calculateDailyCalories,
+    calculateBodyFatPercentage,
+    calculateMaxHeartRate,
+    calculateHeartRateZones,
+    calculateWaterNeeds,
+    convertBloodSugar,
+    evaluateBloodSugar,
+    evaluateBloodPressure,
+    evaluateHeartRate,
+    calculateActivityCalories,
+    calculateNutrients,
+    calculateDistanceFromSteps,
+    calculateSpeed,
+    calculateTotalNutrients,
+    calculateMedicationAdherence,
+    getAdherenceStatus,
+    isScheduledForDay,
+    isSameDay,
+    isSameTime,
+    daysBetween
+  };
