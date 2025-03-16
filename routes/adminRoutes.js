@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { isAdmin } = require('../middlewares/isAdmin');
-const { upload } = require('../middlewares/multer');
+const { simpleUpload } = require('../middlewares/multer');
 
 // Admin middleware - tüm admin rotaları için
 router.use(isAdmin);

@@ -1693,5 +1693,10 @@ exports.getActivityDetail = async (req, res) => {
         });
       }
     };
-    
+
+    // controllers/physicalActivityController.js içinde
+    exports.getEditActivity = (req, res) => {
+      res.send('Bu fonksiyon hazırlanacak.');
+    };
+
     module.exports = exports;

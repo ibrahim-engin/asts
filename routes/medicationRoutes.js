@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const medicationController = require('../controllers/medicationController');
 const { isAuthenticated } = require('../middlewares/isAuth');
-const { upload } = require('../middlewares/multer');
+const { simpleUpload } = require('../middlewares/multer');
 
 // Tüm ilaç rotaları için kimlik doğrulama gerekiyor
 router.use(isAuthenticated);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const healthDataController = require('../controllers/healthDataController');
 const { isAuthenticated } = require('../middlewares/isAuth');
-const { upload } = require('../middlewares/multer');
+const { simpleUpload } = require('../middlewares/multer');
 
 // Tüm sağlık verisi rotaları için kimlik doğrulama gerekiyor
 router.use(isAuthenticated);
@@ -29,7 +29,7 @@ router.get('/data/:familyMemberId/graph/:dataType', healthDataController.getHeal
 
 // Sağlık verisi içe/dışa aktarma
 router.get('/data/:familyMemberId/import', healthDataController.getImportHealthData);
-router.post('/data/:familyMemberId/import', upload.single('healthDataFile'), healthDataController.importHealthData);
+router.post('/data/:familyMemberId/import', simpleUpload.single('healthDataFile'), healthDataController.importHealthData);
 router.get('/data/:familyMemberId/export', healthDataController.exportHealthData);
 
 module.exports = router;

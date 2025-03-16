@@ -1720,5 +1720,10 @@ exports.updateStatus = async (req, res) => {
       });
     }
   };
-  
+
+// aipRoutes İsteği
+exports.someFunction = (req, res) => {
+  res.send('Bu fonksiyon sonradan eklenecek.');
+};
+
   module.exports = exports;

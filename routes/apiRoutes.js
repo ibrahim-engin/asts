@@ -41,9 +41,9 @@ router.post('/health/data/:familyMemberId', isAuthenticated, healthDataControlle
 // İlaç takibi rotaları
 router.get('/medication/:familyMemberId', isAuthenticated, medicationController.apiGetMedicationList);
 router.get('/medication/:familyMemberId/:medicationId', isAuthenticated, medicationController.apiGetMedicationDetail);
-router.post('/medication', isAuthenticated, medicationController.apiAddMedication);
-router.put('/medication/:medicationId', isAuthenticated, medicationController.apiUpdateMedication);
-router.delete('/medication/:medicationId', isAuthenticated, medicationController.apiDeleteMedication);
+// router.post('/medication', isAuthenticated, medicationController.apiAddMedication);
+// router.put('/medication/:medicationId', isAuthenticated, medicationController.apiUpdateMedication);
+// router.delete('/medication/:medicationId', isAuthenticated, medicationController.apiDeleteMedication);
 router.get('/medication/:familyMemberId/schedule', isAuthenticated, medicationController.apiGetMedicationSchedule);
 router.post('/medication/:familyMemberId/:medicationId/log', isAuthenticated, medicationController.apiLogMedicationTaken);
 

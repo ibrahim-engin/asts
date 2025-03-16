@@ -24,6 +24,9 @@ const config = require('./config');
 // Express uygulamasını başlat
 const app = express();
 
+// index.js dosyasında mongoose import'undan sonra ekleyin
+mongoose.set('strictQuery', false);
+
 // Veritabanı bağlantısını kurma
 mongoose
   .connect(process.env.MONGODB_URI, config.mongooseOptions)
@@ -103,6 +106,7 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.user = req.session.user || null;
   res.locals.isAdmin = req.session.isAdmin || false;
+  res.locals.req = req;  // Bu satırı ekleyin
   next();
 });
 

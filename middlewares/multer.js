@@ -292,6 +292,13 @@ const handleMulterError = (err, req, res, next) => {
 
 // Multer konfigürasyonları
 const upload = {
+    // avatar form alanını kullanmak için
+    avatar: multer({
+      storage: profileStorage,
+      limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+      fileFilter: profileFileFilter
+    }).single('avatar'),
+    
   // Temel dosya yükleme
   single: multer({
     storage: baseStorage,
@@ -352,7 +359,27 @@ const upload = {
 // Kullanım örneği:
 // router.post('/upload', upload.single, handleMulterError, (req, res) => { ... });
 
+// Yeni export - multer örneğini direkt export ediyoruz
+const simpleUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dest = path.join(__dirname, '../public/uploads/general');
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+      }
+      cb(null, dest);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+      const extension = path.extname(file.originalname).toLowerCase();
+      cb(null, `file-${uniqueSuffix}${extension}`);
+    }
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+
 module.exports = {
-  upload,
-  handleMulterError
+  upload, // Mevcut konfigürasyon
+  handleMulterError,
+  simpleUpload // Yeni eklediğimiz basit konfigürasyon
 };
