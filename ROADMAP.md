@@ -43,15 +43,13 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] healthDataController.js - Sağlık verilerinin yönetimi
 - [x] medicationController.js - İlaç takibi yönetimi
 - [x] medicalHistoryController.js - Tıbbi geçmiş yönetimi
+- [x] nutritionController.js - Beslenme verilerinin yönetimi
+- [x] physicalActivityController.js - Fiziksel aktivite verilerinin yönetimi
+- [x] reminderController.js - Hatırlatıcıların yönetimi
+- [x] reportController.js - Raporlama işlemleri
+- [x] userController.js - Kullanıcı yönetimi
 
 ## 🟡 Devam Eden Görevler
-
-### Controller Dosyaları
-- [ ] nutritionController.js - Beslenme verilerinin yönetimi
-- [ ] physicalActivityController.js - Fiziksel aktivite verilerinin yönetimi
-- [ ] reminderController.js - Hatırlatıcıların yönetimi
-- [ ] reportController.js - Raporlama işlemleri
-- [ ] userController.js - Kullanıcı yönetimi
 
 ### Route Dosyaları
 - [ ] adminRoutes.js - Admin panel rotaları
@@ -169,10 +167,11 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 
 ## 🔄 Güncelleme Geçmişi
 
-- **15 Mart 2025** - Proje başlatıldı
-- **15 Mart 2025** - Temel mimari ve dosyalar oluşturuldu
-- **15 Mart 2025** - Veritabanı Modelleri ve dosyalar oluşturuldu
-- **15 Mart 2025** - Middleware Dosyaları oluşturuldu
+- **15 Mart 2025** - Proje başlatıldı.
+- **15 Mart 2025** - Temel mimari ve dosyalar oluşturuldu.
+- **15 Mart 2025** - Veritabanı Modelleri ve dosyalar oluşturuldu.
+- **15 Mart 2025** - Middleware Dosyaları oluşturuldu.
+- **15 Mart 2025** - Controller Dosyaları oluşturuldu.
 
 ---
 

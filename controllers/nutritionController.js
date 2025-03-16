@@ -734,31 +734,31 @@ exports.getAddNutrition = async (req, res) => {
           { value: 'diğer', label: 'Diğer' }
         ],
         beverageCategories: [
-          { value: 'su', label: 'Su' },
-          { value: 'çay', label: 'Çay' },
-          { value: 'kahve', label: 'Kahve' },
-          { value: 'meyve_suyu', label: 'Meyve Suyu' },
-          { value: 'gazlı_içecek', label: 'Gazlı İçecek' },
-          { value: 'alkollü_içecek', label: 'Alkollü İçecek' },
-          { value: 'süt', label: 'Süt' },
-          { value: 'ayran', label: 'Ayran' },
-          { value: 'enerji_içeceği', label: 'Enerji İçeceği' },
-          { value: 'bitki_çayı', label: 'Bitki Çayı' },
-          { value: 'diğer', label: 'Diğer' }
+            { value: 'su', label: 'Su' },
+            { value: 'çay', label: 'Çay' },
+            { value: 'kahve', label: 'Kahve' },
+            { value: 'meyve_suyu', label: 'Meyve Suyu' },
+            { value: 'gazlı_içecek', label: 'Gazlı İçecek' },
+            { value: 'alkollü_içecek', label: 'Alkollü İçecek' },
+            { value: 'süt', label: 'Süt' },
+            { value: 'ayran', label: 'Ayran' },
+            { value: 'enerji_içeceği', label: 'Enerji İçeceği' },
+            { value: 'bitki_çayı', label: 'Bitki Çayı' },
+            { value: 'diğer', label: 'Diğer' }
           ]
         }
-      });
+      );
     } catch (error) {
-      logError(error, req);
-      
-      if (error.name === 'ValidationError') {
-        req.flash('error_msg', 'Geçersiz veya eksik veri');
-        return res.redirect(`/nutrition/${req.params.familyMemberId}/${req.params.nutritionDataId}/edit`);
+        logError(error, req);
+  
+        if (error.name === 'ValidationError') {
+          req.flash('error_msg', 'Geçersiz veya eksik veri');
+          return res.redirect(`/nutrition/${req.params.familyMemberId}/${req.params.nutritionDataId}/edit`);
+        }
+  
+        req.flash('error_msg', 'Beslenme verisi güncellenirken bir hata oluştu');
+        res.redirect(`/nutrition/${req.params.familyMemberId}/${req.params.nutritionDataId}/edit`);
       }
-      
-      req.flash('error_msg', 'Beslenme verisi güncellenirken bir hata oluştu');
-      res.redirect(`/nutrition/${req.params.familyMemberId}/${req.params.nutritionDataId}/edit`);
-    }
   };
   
   /**
@@ -1431,6 +1431,441 @@ exports.getAddNutrition = async (req, res) => {
     }
   };
   
+/**
+ * API: Beslenme verisi ekleme
+ * @route   POST /api/nutrition
+ * @access  Private
+ */
+exports.apiAddNutrition = async (req, res) => {
+    try {
+      const { familyMemberId } = req.body;
+      
+      if (!familyMemberId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Aile üyesi ID\'si belirtilmedi'
+        });
+      }
+      
+      // Aile üyesini kontrol et (admin her aile üyesine erişebilir)
+      let familyMember;
+      
+      if (req.isAdmin) {
+        familyMember = await FamilyMember.findById(familyMemberId);
+      } else {
+        familyMember = await FamilyMember.findOne({
+          _id: familyMemberId,
+          userId: req.user._id
+        });
+      }
+      
+      if (!familyMember) {
+        return res.status(404).json({
+          success: false,
+          error: 'Aile üyesi bulunamadı'
+        });
+      }
+      
+      // Beslenme verisi oluştur
+      const nutritionData = new NutritionData({
+        ...req.body,
+        createdBy: req.user._id
+      });
+      
+      // Beslenme verisini kaydet
+      await nutritionData.save();
+      
+      // Kan şekeri ölçümlerini sağlık verileri olarak da kaydet
+      if (nutritionData.bloodSugarBefore && nutritionData.bloodSugarBefore.value) {
+        const healthData = new HealthData({
+          familyMemberId,
+          measuredBy: req.user._id,
+          dataType: 'bloodSugar',
+          measuredAt: new Date(`${nutritionData.date.toISOString().split('T')[0]}T${nutritionData.bloodSugarBefore.time || '00:00'}`),
+          bloodSugar: {
+            value: nutritionData.bloodSugarBefore.value,
+            unit: nutritionData.bloodSugarBefore.unit,
+            measurementType: 'random',
+            timeSinceLastMeal: 0 // Öğün öncesi
+          },
+          notes: `${nutritionData.mealType} öncesi otomatik kaydedilen kan şekeri ölçümü.`
+        });
+        
+        await healthData.save();
+        
+        logInfo('API: Beslenme kaydından kan şekeri verisi oluşturuldu', {
+          userId: req.user._id,
+          familyMemberId,
+          nutritionDataId: nutritionData._id,
+          healthDataId: healthData._id,
+          type: 'before'
+        });
+      }
+      
+      if (nutritionData.bloodSugarAfter && nutritionData.bloodSugarAfter.value) {
+        const healthData = new HealthData({
+          familyMemberId,
+          measuredBy: req.user._id,
+          dataType: 'bloodSugar',
+          measuredAt: new Date(`${nutritionData.date.toISOString().split('T')[0]}T${nutritionData.bloodSugarAfter.time || '00:00'}`),
+          bloodSugar: {
+            value: nutritionData.bloodSugarAfter.value,
+            unit: nutritionData.bloodSugarAfter.unit,
+            measurementType: 'postprandial',
+            timeSinceLastMeal: nutritionData.bloodSugarAfter.minutesAfter || null
+          },
+          notes: `${nutritionData.mealType} sonrası otomatik kaydedilen kan şekeri ölçümü.`
+        });
+        
+        await healthData.save();
+        
+        logInfo('API: Beslenme kaydından kan şekeri verisi oluşturuldu', {
+          userId: req.user._id,
+          familyMemberId,
+          nutritionDataId: nutritionData._id,
+          healthDataId: healthData._id,
+          type: 'after'
+        });
+      }
+      
+      // API yanıtı
+      res.status(201).json({
+        success: true,
+        data: nutritionData
+      });
+    } catch (error) {
+      logError(error, req);
+      
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({
+          success: false,
+          error: 'Geçersiz veri formatı',
+          details: Object.values(error.errors).map(err => err.message)
+        });
+      }
+      
+      res.status(500).json({
+        success: false,
+        error: 'Beslenme verisi eklenirken bir hata oluştu'
+      });
+    }
+  };
+  
   /**
-   * API: Beslenme verisi ekleme
-   * @route   POST /api/nutrition
+   * API: Beslenme verisi güncelleme
+   * @route   PUT /api/nutrition/:nutritionDataId
+   * @access  Private
+   */
+  exports.apiUpdateNutrition = async (req, res) => {
+    try {
+      const { nutritionDataId } = req.params;
+      const { familyMemberId } = req.body;
+      
+      if (!familyMemberId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Aile üyesi ID\'si belirtilmedi'
+        });
+      }
+      
+      // Aile üyesini kontrol et (admin her aile üyesine erişebilir)
+      let familyMember;
+      
+      if (req.isAdmin) {
+        familyMember = await FamilyMember.findById(familyMemberId);
+      } else {
+        familyMember = await FamilyMember.findOne({
+          _id: familyMemberId,
+          userId: req.user._id
+        });
+      }
+      
+      if (!familyMember) {
+        return res.status(404).json({
+          success: false,
+          error: 'Aile üyesi bulunamadı'
+        });
+      }
+      
+      // Beslenme verisini bul
+      let nutritionData = await NutritionData.findOne({
+        _id: nutritionDataId,
+        familyMemberId
+      });
+      
+      if (!nutritionData) {
+        return res.status(404).json({
+          success: false,
+          error: 'Beslenme verisi bulunamadı'
+        });
+      }
+      
+      // Güncellenebilir alanlar
+      const updateFields = [
+        'mealType', 'date', 'time', 'duration', 'location', 'isPlanned', 'isFasting',
+        'foods', 'beverages', 'bloodSugarBefore', 'bloodSugarAfter', 'mood', 'hunger',
+        'symptoms', 'notes'
+      ];
+      
+      // Alanları güncelle
+      updateFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+          nutritionData[field] = req.body[field];
+        }
+      });
+      
+      // Son güncelleyen kullanıcıyı kaydet
+      nutritionData.updatedBy = req.user._id;
+      
+      // Beslenme verisini kaydet
+      await nutritionData.save();
+      
+      // API yanıtı
+      res.json({
+        success: true,
+        data: nutritionData
+      });
+    } catch (error) {
+      logError(error, req);
+      
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({
+          success: false,
+          error: 'Geçersiz veri formatı',
+          details: Object.values(error.errors).map(err => err.message)
+        });
+      }
+      
+      res.status(500).json({
+        success: false,
+        error: 'Beslenme verisi güncellenirken bir hata oluştu'
+      });
+    }
+  };
+  
+  /**
+   * API: Beslenme verisi silme
+   * @route   DELETE /api/nutrition/:nutritionDataId
+   * @access  Private
+   */
+  exports.apiDeleteNutrition = async (req, res) => {
+    try {
+      const { nutritionDataId } = req.params;
+      
+      // Beslenme verisini bul
+      const nutritionData = await NutritionData.findById(nutritionDataId);
+      
+      if (!nutritionData) {
+        return res.status(404).json({
+          success: false,
+          error: 'Beslenme verisi bulunamadı'
+        });
+      }
+      
+      // Aile üyesini kontrol et
+      let familyMember;
+      
+      if (req.isAdmin) {
+        familyMember = await FamilyMember.findById(nutritionData.familyMemberId);
+      } else {
+        familyMember = await FamilyMember.findOne({
+          _id: nutritionData.familyMemberId,
+          userId: req.user._id
+        });
+      }
+      
+      if (!familyMember) {
+        return res.status(403).json({
+          success: false,
+          error: 'Bu beslenme verisini silme yetkiniz yok'
+        });
+      }
+      
+      // Beslenme verisini sil
+      await nutritionData.remove();
+      
+      // Log kaydı
+      logInfo('API: Beslenme verisi silindi', {
+        userId: req.user._id,
+        familyMemberId: nutritionData.familyMemberId,
+        nutritionDataId: nutritionData._id
+      });
+      
+      // API yanıtı
+      res.json({
+        success: true,
+        data: {}
+      });
+    } catch (error) {
+      logError(error, req);
+      
+      res.status(500).json({
+        success: false,
+        error: 'Beslenme verisi silinirken bir hata oluştu'
+      });
+    }
+  };
+  
+  /**
+   * API: Beslenme istatistikleri
+   * @route   GET /api/nutrition/:familyMemberId/stats
+   * @access  Private
+   */
+  exports.apiGetNutritionStats = async (req, res) => {
+    try {
+      const { familyMemberId } = req.params;
+      const { startDate, endDate, period = 'month' } = req.query;
+      
+      // Aile üyesini kontrol et
+      let familyMember;
+      
+      if (req.isAdmin) {
+        familyMember = await FamilyMember.findById(familyMemberId);
+      } else {
+        familyMember = await FamilyMember.findOne({
+          _id: familyMemberId,
+          userId: req.user._id
+        });
+      }
+      
+      if (!familyMember) {
+        return res.status(404).json({
+          success: false,
+          error: 'Aile üyesi bulunamadı'
+        });
+      }
+      
+      // Tarih aralığını hesapla
+      let dateRange = {};
+      
+      if (startDate && endDate) {
+        dateRange.startDate = new Date(startDate);
+        dateRange.endDate = new Date(endDate);
+      } else {
+        const now = new Date();
+        
+        if (period === 'week') {
+          dateRange.startDate = new Date(now.setDate(now.getDate() - 7));
+        } else if (period === 'month') {
+          dateRange.startDate = new Date(now.setMonth(now.getMonth() - 1));
+        } else if (period === 'quarter') {
+          dateRange.startDate = new Date(now.setMonth(now.getMonth() - 3));
+        } else if (period === 'year') {
+          dateRange.startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+        } else {
+          // Varsayılan olarak 1 ay
+          dateRange.startDate = new Date(now.setMonth(now.getMonth() - 1));
+        }
+        dateRange.endDate = new Date();
+      }
+      
+      // Beslenme verilerini getir
+      const nutritionData = await NutritionData.find({
+        familyMemberId,
+        date: {
+          $gte: dateRange.startDate,
+          $lte: dateRange.endDate
+        }
+      }).sort({ date: 1 });
+      
+      // İstatistikleri hesapla
+      // Toplam değerler ve ortalamalar
+      const totalCalories = nutritionData.reduce((sum, data) => sum + (data.totalNutritionalValues.calories || 0), 0);
+      const totalCarbs = nutritionData.reduce((sum, data) => sum + (data.totalNutritionalValues.carbs || 0), 0);
+      const totalProteins = nutritionData.reduce((sum, data) => sum + (data.totalNutritionalValues.proteins || 0), 0);
+      const totalFats = nutritionData.reduce((sum, data) => sum + (data.totalNutritionalValues.fats || 0), 0);
+      
+      // Tarih aralığındaki gün sayısı
+      const dayCount = Math.ceil((dateRange.endDate - dateRange.startDate) / (1000 * 60 * 60 * 24));
+      
+      // Öğün tipine göre dağılım
+      const mealTypeCounts = {};
+      nutritionData.forEach(data => {
+        if (!mealTypeCounts[data.mealType]) {
+          mealTypeCounts[data.mealType] = 0;
+        }
+        mealTypeCounts[data.mealType]++;
+      });
+      
+      // Günlük kalori grafiği için veriyi oluştur
+      const caloriesByDay = {};
+      nutritionData.forEach(data => {
+        const dateKey = data.date.toISOString().split('T')[0]; // YYYY-MM-DD formatı
+        if (!caloriesByDay[dateKey]) {
+          caloriesByDay[dateKey] = 0;
+        }
+        caloriesByDay[dateKey] += data.totalNutritionalValues.calories || 0;
+      });
+      
+      // Günlük kalori verilerini dizi formatına dönüştür
+      const caloriesArray = Object.keys(caloriesByDay).map(date => ({
+        date,
+        calories: caloriesByDay[date]
+      }));
+      
+      // Makro besin dağılımı
+      const totalMacroCalories = (totalCarbs * 4) + (totalProteins * 4) + (totalFats * 9);
+      let macroRatios = {
+        carbs: 0,
+        proteins: 0,
+        fats: 0
+      };
+      
+      if (totalMacroCalories > 0) {
+        macroRatios = {
+          carbs: parseFloat(((totalCarbs * 4) / totalMacroCalories * 100).toFixed(1)),
+          proteins: parseFloat(((totalProteins * 4) / totalMacroCalories * 100).toFixed(1)),
+          fats: parseFloat(((totalFats * 9) / totalMacroCalories * 100).toFixed(1))
+        };
+      }
+      
+      // İstatistik sonuçlarını hazırla
+      const stats = {
+        period: {
+          start: dateRange.startDate,
+          end: dateRange.endDate,
+          days: dayCount
+        },
+        overview: {
+          totalEntries: nutritionData.length,
+          totalCalories,
+          avgCaloriesPerDay: dayCount > 0 ? Math.round(totalCalories / dayCount) : 0,
+          entriesPerDay: dayCount > 0 ? parseFloat((nutritionData.length / dayCount).toFixed(1)) : 0
+        },
+        macronutrients: {
+          total: {
+            carbs: totalCarbs,
+            proteins: totalProteins,
+            fats: totalFats
+          },
+          daily: {
+            carbs: dayCount > 0 ? parseFloat((totalCarbs / dayCount).toFixed(1)) : 0,
+            proteins: dayCount > 0 ? parseFloat((totalProteins / dayCount).toFixed(1)) : 0,
+            fats: dayCount > 0 ? parseFloat((totalFats / dayCount).toFixed(1)) : 0
+          },
+          ratios: macroRatios
+        },
+        distribution: {
+          mealTypes: mealTypeCounts
+        },
+        timeSeries: {
+          caloriesByDay: caloriesArray
+        }
+      };
+      
+      // API yanıtı
+      res.json({
+        success: true,
+        data: stats
+      });
+    } catch (error) {
+      logError(error, req);
+      
+      res.status(500).json({
+        success: false,
+        error: 'Beslenme istatistikleri hesaplanırken bir hata oluştu'
+      });
+    }
+  };
+  
+  module.exports = exports;
