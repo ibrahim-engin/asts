@@ -62,21 +62,23 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] reportRoutes.js - Rapor rotaları
 - [x] userRoutes.js - Kullanıcı rotaları
 
-## 🟡 Devam Eden Görevler
-
 ### Servis Dosyaları
-- [ ] cacheService.js - Önbellek servisi
-- [ ] emailService.js - E-posta servisi
-- [ ] exportService.js - Veri dışa aktarma servisi
-- [ ] graphService.js - Grafik oluşturma servisi
-- [ ] notificationService.js - Bildirim servisi
-- [ ] reportService.js - Rapor oluşturma servisi
-- [ ] storageService.js - Dosya depolama servisi
+- [x] cacheService.js - Önbellek servisi
+- [x] emailService.js - E-posta servisi
+- [x] exportService.js - Veri dışa aktarma servisi
+- [x] graphService.js - Grafik oluşturma servisi
+- [x] notificationService.js - Bildirim servisi
+- [x] reportService.js - Rapor oluşturma servisi
+- [x] storageService.js - Dosya depolama servisi
 
 ### Utility Dosyaları
-- [ ] constants.js - Sabit değerler
-- [ ] dateHelper.js - Tarih yardımcı fonksiyonları
-- [ ] dbConnection.js - Veritabanı bağlantı yönetimi
+- [x] constants.js - Sabit değerler
+- [x] dateHelper.js - Tarih yardımcı fonksiyonları
+- [x] dbConnection.js - Veritabanı bağlantı yönetimi
+
+## 🟡 Devam Eden Görevler
+
+### Utility Dosyaları
 - [ ] healthCalculator.js - Sağlık hesaplamaları
 - [ ] logger.js - Loglama yardımcıları
 - [ ] validators.js - Doğrulama yardımcıları
@@ -173,6 +175,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **15 Mart 2025** - Middleware Dosyaları oluşturuldu.
 - **16 Mart 2025** - Controller Dosyaları oluşturuldu.
 - **16 Mart 2025** - Routes Dosyaları oluşturuldu.
+- **16 Mart 2025** - Servis Dosyaları oluşturuldu.
 
 ---
 
