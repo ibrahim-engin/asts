@@ -4,63 +4,63 @@
     "description": "Aile Sağlık Takip Sistemi - MongoDB tabanlı bir Node.js web uygulaması",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js",
-      "dev": "nodemon index.js",
-      "seed": "node utils/dbSeeder.js",
-      "test": "jest"
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "seed": "node utils/dbSeeder.js",
+        "test": "jest"
     },
     "keywords": [
-      "health",
-      "tracking",
-      "family",
-      "medicine",
-      "mongodb",
-      "express",
-      "node",
-      "ejs"
+        "health",
+        "tracking",
+        "family",
+        "medicine",
+        "mongodb",
+        "express",
+        "node",
+        "ejs"
     ],
-    "author": "UrarTech Development",
+    "author": "İbrahim ENGİN",
     "license": "MIT",
     "dependencies": {
-      "bcryptjs": "^2.4.3",
-      "chart.js": "^3.9.1",
-      "colors": "^1.4.0",
-      "compression": "^1.7.4",
-      "connect-flash": "^0.1.1",
-      "connect-mongo": "^4.6.0",
-      "cookie-parser": "^1.4.6",
-      "cors": "^2.8.5",
-      "dotenv": "^16.0.3",
-      "ejs": "^3.1.8",
-      "express": "^4.18.2",
-      "express-rate-limit": "^6.7.0",
-      "express-session": "^1.17.3",
-      "express-validator": "^6.14.3",
-      "helmet": "^6.0.1",
-      "joi": "^17.7.0",
-      "jsonwebtoken": "^9.0.0",
-      "method-override": "^3.0.0",
-      "moment": "^2.29.4",
-      "mongoose": "^6.9.0",
-      "morgan": "^1.10.0",
-      "multer": "^1.4.5-lts.1",
-      "nodemailer": "^6.9.1",
-      "pdfkit": "^0.13.0",
-      "socket.io": "^4.6.0",
-      "uuid": "^9.0.0",
-      "winston": "^3.8.2",
-      "xlsx": "^0.18.5"
+        "bcryptjs": "^2.4.3",
+        "chart.js": "^3.9.1",
+        "colors": "^1.4.0",
+        "compression": "^1.7.4",
+        "connect-flash": "^0.1.1",
+        "connect-mongo": "^4.6.0",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "ejs": "^3.1.8",
+        "express": "^4.18.2",
+        "express-rate-limit": "^6.7.0",
+        "express-session": "^1.17.3",
+        "express-validator": "^6.14.3",
+        "helmet": "^6.0.1",
+        "joi": "^17.7.0",
+        "jsonwebtoken": "^9.0.0",
+        "method-override": "^3.0.0",
+        "moment": "^2.29.4",
+        "mongoose": "^6.9.0",
+        "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.1",
+        "pdfkit": "^0.13.0",
+        "socket.io": "^4.6.0",
+        "uuid": "^9.0.0",
+        "winston": "^3.8.2",
+        "xlsx": "^0.18.5"
     },
     "devDependencies": {
-      "jest": "^29.4.1",
-      "nodemon": "^2.0.20",
-      "supertest": "^6.3.3"
+        "jest": "^29.4.1",
+        "nodemon": "^3.1.9",
+        "supertest": "^6.3.3"
     },
     "engines": {
-      "node": ">=14.0.0"
+        "node": ">=14.0.0"
     },
     "repository": {
-      "type": "git",
-      "url": "https://github.com/urartechdev/asts.git"
+        "type": "git",
+        "url": "https://github.com/ibrahim-engin/asts.git"
     }
-  }
+}

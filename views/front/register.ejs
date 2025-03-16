@@ -1,0 +1,114 @@
+<%- include('../partials/header') %>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i> Kayıt Ol</h4>
+            </div>
+            <div class="card-body">
+                <%- include('../partials/alerts') %>
+                
+                <form action="/auth/register" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Ad</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Adınız" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="surname" class="form-label">Soyad</label>
+                                <input type="text" class="form-control" id="surname" name="surname" placeholder="Soyadınız" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-posta Adresi</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="ornek@mail.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Telefon Numarası</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="5XX XXX XXXX">
+                        </div>
+                        <div class="form-text">Başında 0 olmadan 10 haneli olarak giriniz.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Şifre</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+                                </div>
+                                <div class="form-text">En az 6 karakter olmalıdır.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="passwordConfirm" class="form-label">Şifre (Tekrar)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="********" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                        <label class="form-check-label" for="terms">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Kullanım şartlarını</a> okudum ve kabul ediyorum.
+                        </label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i> Kayıt Ol
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <p class="mb-0">Zaten hesabınız var mı? <a href="/auth/login" class="text-decoration-none">Giriş Yap</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kullanım Şartları Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Kullanım Şartları</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Aile Sağlık Takip Sistemi Kullanım Şartları</h5>
+                <p>Bu uygulamayı kullanarak aşağıdaki şartları kabul etmiş olursunuz:</p>
+                <ol>
+                    <li>Bu uygulama sağlık profesyonelleri ile iletişimin yerini almaz.</li>
+                    <li>Acil durumlarda derhal sağlık kuruluşuna başvurunuz.</li>
+                    <li>Kaydettiğiniz tüm verilerin doğruluğundan ve güncelliğinden siz sorumlusunuz.</li>
+                    <li>Hesap bilgilerinizin güvenliğini sağlamak sizin sorumluluğunuzdadır.</li>
+                    <li>Verileriniz KVKK kapsamında korunmaktadır.</li>
+                </ol>
+                <p>Daha fazla bilgi için yasal metnin tamamını <a href="#">buradan</a> inceleyebilirsiniz.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="document.getElementById('terms').checked = true;">Kabul Ediyorum</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

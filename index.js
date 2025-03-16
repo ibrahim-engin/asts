@@ -14,6 +14,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 
+// Log
+console.log('Uygulama başlatılıyor...');
+
 // Yapılandırma dosyalarını yükle
 dotenv.config();
 const config = require('./config');
@@ -31,6 +34,11 @@ mongoose
     console.error(`Veritabanı Bağlantı Hatası: ${err.message}`.red.bold);
     process.exit(1);
   });
+
+// Ve genel bir hata yakalayıcı
+process.on('uncaughtException', (err) => {
+  console.error('Yakalanmamış Hata:', err);
+});
 
 // Güvenlik ayarları
 app.use(helmet({

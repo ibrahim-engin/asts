@@ -1,0 +1,447 @@
+<%- include('../partials/admin/header') %>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Admin Dashboard</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="window.print()">
+        <i class="fas fa-download fa-sm text-white-50"></i> Rapor Oluştur
+    </a>
+</div>
+
+<%- include('../partials/alerts') %>
+
+<!-- İstatistik Kartları -->
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Toplam Kullanıcı</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalUsers %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Aktif Kullanıcılar</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalActiveUsers %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Aile Üyeleri</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalFamilyMembers %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-friends fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Sağlık Verisi</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalHealthData %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-heartbeat fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- İkinci Sıra İstatistikler -->
+<div class="row">
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Son Ay Yeni Kullanıcı</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.newUsersLastMonth %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Bugün Eklenen Veri</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.todayHealthData %></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Hızlı İşlemler</div>
+                        <div class="mt-2">
+                            <a href="/<%= process.env.ADMIN_PAGE_URL %>/users" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-users"></i> Kullanıcılar
+                            </a>
+                            <a href="/<%= process.env.ADMIN_PAGE_URL %>/settings" class="btn btn-sm btn-outline-dark">
+                                <i class="fas fa-cog"></i> Ayarlar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ 
+ <!-- İçerik Satırı -->
+ <div class="row">
+    <!-- Son Kullanıcılar -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Son Katılan Kullanıcılar</h6>
+                <a href="/<%= process.env.ADMIN_PAGE_URL %>/users" class="btn btn-sm btn-primary">
+                    Tümünü Gör <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                <% if (recentUsers && recentUsers.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Kayıt Tarihi</th>
+                                    <th>Son Giriş</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% recentUsers.forEach(user => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                                    <%= user.name.charAt(0) %><%= user.surname.charAt(0) %>
+                                                </div>
+                                                <div>
+                                                    <div><%= user.name %> <%= user.surname %></div>
+                                                    <small class="text-muted"><%= user.email %></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><%= new Date(user.createdAt).toLocaleDateString('tr-TR') %></td>
+                                        <td>
+                                            <% if (user.lastLogin) { %>
+                                                <%= new Date(user.lastLogin).toLocaleDateString('tr-TR') %>
+                                            <% } else { %>
+                                                <span class="text-muted">Henüz giriş yapmadı</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="/<%= process.env.ADMIN_PAGE_URL %>/users/<%= user._id %>" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
+                        <p class="mb-0">Henüz kullanıcı bulunmuyor.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Kritik Sağlık Verileri -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-danger text-white">
+                <h6 class="m-0 font-weight-bold">Kritik Sağlık Verileri</h6>
+                <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data" class="btn btn-sm btn-light">
+                    Tümünü Gör <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                <% if (criticalHealthData && criticalHealthData.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Veri Tipi</th>
+                                    <th>Ölçüm Tarihi</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% criticalHealthData.forEach(data => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <div><%= data.familyMemberId.name %> <%= data.familyMemberId.surname %></div>
+                                                    <small class="text-muted"><%= data.familyMemberId.relationship %></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger">
+                                                <% if (data.dataType === 'bloodSugar') { %>
+                                                    Kan Şekeri
+                                                <% } else if (data.dataType === 'bloodPressure') { %>
+                                                    Tansiyon
+                                                <% } else if (data.dataType === 'heartRate') { %>
+                                                    Nabız
+                                                <% } else if (data.dataType === 'weight') { %>
+                                                    Kilo
+                                                <% } else { %>
+                                                    <%= data.dataType %>
+                                                <% } %>
+                                            </span>
+                                        </td>
+                                        <td><%= new Date(data.measuredAt).toLocaleDateString('tr-TR') %></td>
+                                        <td>
+                                            <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data/<%= data._id %>" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <p class="mb-0">Kritik durumda sağlık verisi bulunmuyor.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+ </div>
+ 
+ <!-- Son Eklenen Sağlık Verileri -->
+ <div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Son Eklenen Sağlık Verileri</h6>
+                <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data" class="btn btn-sm btn-primary">
+                    Tümünü Gör <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                <% if (recentHealthData && recentHealthData.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Veri Tipi</th>
+                                    <th>Durum</th>
+                                    <th>Ölçüm Tarihi</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% recentHealthData.forEach(data => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <div><%= data.familyMemberId.name %> <%= data.familyMemberId.surname %></div>
+                                                    <small class="text-muted"><%= data.familyMemberId.relationship %></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <% if (data.dataType === 'bloodSugar') { %>
+                                                Kan Şekeri
+                                            <% } else if (data.dataType === 'bloodPressure') { %>
+                                                Tansiyon
+                                            <% } else if (data.dataType === 'heartRate') { %>
+                                                Nabız
+                                            <% } else if (data.dataType === 'weight') { %>
+                                                Kilo
+                                            <% } else { %>
+                                                <%= data.dataType %>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (data.status === 'normal') { %>
+                                                <span class="badge bg-success">Normal</span>
+                                            <% } else if (data.status === 'warning') { %>
+                                                <span class="badge bg-warning">Uyarı</span>
+                                            <% } else if (data.status === 'critical') { %>
+                                                <span class="badge bg-danger">Kritik</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= new Date(data.measuredAt).toLocaleDateString('tr-TR') %></td>
+                                        <td>
+                                            <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data/<%= data._id %>" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-4">
+                        <i class="fas fa-heartbeat fa-3x text-gray-300 mb-3"></i>
+                        <p class="mb-0">Henüz sağlık verisi eklenmemiş.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+ </div>
+ 
+<!-- Grafikler -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Kullanıcı İstatistikleri</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="userStatsChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Sağlık Verisi Dağılımı</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="healthDataChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Önce bir div ekleyerek data attributes ile verileri saklayalım -->
+<div id="chart-data" 
+     data-new-users-last-month="<%= stats.newUsersLastMonth %>" 
+     style="display:none;"></div>
+
+<!-- Grafikleri başlat -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data attribute'den değeri alalım
+        const chartData = document.getElementById('chart-data');
+        const newUsersLastMonth = parseInt(chartData.dataset.newUsersLastMonth);
+        
+        // Kullanıcı istatistikleri grafiği
+        var userStatsCtx = document.getElementById('userStatsChart').getContext('2d');
+        var userStatsChart = new Chart(userStatsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran'],
+                datasets: [{
+                    label: 'Yeni Kullanıcılar',
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                    data: [10, 15, 12, 20, 18, newUsersLastMonth]
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Sağlık verisi dağılımı grafiği
+        var healthDataCtx = document.getElementById('healthDataChart').getContext('2d');
+        var healthDataChart = new Chart(healthDataCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Kan Şekeri', 'Tansiyon', 'Nabız', 'Kilo', 'Diğer'],
+                datasets: [{
+                    data: [35, 25, 15, 20, 5],
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#858796'],
+                    hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#f4b619', '#6e707e'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    });
+</script>
+ 
+ <%- include('../partials/admin/footer') %>

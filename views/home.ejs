@@ -1,0 +1,282 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid">
+    <%- include('partials/alerts') %>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-sm-flex align-items-center justify-content-between">
+                        <h1 class="h3 mb-0 text-gray-800">Hoş Geldiniz, <%= user.name %></h1>
+                        <a href="/user/family-members/new" class="btn btn-primary btn-sm">
+                            <i class="fas fa-user-plus me-1"></i> Yeni Aile Üyesi Ekle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Özet Kartları -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Aile Üyeleri</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.totalFamilyMembers %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Aktif Hatırlatıcılar</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.activeReminders %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bell fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Kritik Uyarılar</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= dashboardData.criticalAlerts %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Hızlı İşlemler
+                            </div>
+                            <div class="mt-2">
+                                <a href="/health/new" class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="fas fa-plus-circle"></i> Sağlık Verisi
+                                </a>
+                                <a href="/reminder/new" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-plus-circle"></i> Hatırlatıcı
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Aile Üyeleri Listesi -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Aile Üyeleri</h6>
+                    <a href="/user/family-members" class="btn btn-sm btn-primary">
+                        Tümünü Gör <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <% if (familyMembers && familyMembers.length > 0) { %>
+                        <div class="list-group">
+                            <% familyMembers.forEach(member => { %>
+                                <a href="/dashboard/<%= member._id %>" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1"><%= member.name %> <%= member.surname %></h6>
+                                            <small class="text-muted"><%= member.relationship %></small>
+                                        </div>
+                                        <span class="badge bg-primary rounded-pill">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </div>
+                                </a>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
+                            <p class="mb-0">Henüz aile üyesi eklenmemiş.</p>
+                            <a href="/user/family-members/new" class="btn btn-primary btn-sm mt-3">
+                                <i class="fas fa-user-plus me-1"></i> Aile Üyesi Ekle
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yaklaşan Hatırlatıcılar -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Yaklaşan Hatırlatıcılar</h6>
+                    <a href="/reminder" class="btn btn-sm btn-primary">
+                        Tümünü Gör <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <% if (upcomingReminders && upcomingReminders.length > 0) { %>
+                        <div class="list-group">
+                            <% upcomingReminders.forEach(item => { %>
+                                <% item.reminders.forEach(reminder => { %>
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1"><%= reminder.title %></h6>
+                                                <small class="text-muted">
+                                                    <%= item.member.name %> <%= item.member.surname %> için
+                                                    <% if (reminder.type === 'medication') { %>
+                                                        <span class="badge bg-info">İlaç</span>
+                                                    <% } else if (reminder.type === 'appointment') { %>
+                                                        <span class="badge bg-warning">Randevu</span>
+                                                    <% } else { %>
+                                                        <span class="badge bg-secondary">Diğer</span>
+                                                    <% } %>
+                                                </small>
+                                            </div>
+                                            <small class="text-muted">
+                                                <%= new Date(reminder.schedule.nextScheduled).toLocaleString('tr-TR', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                }) %>
+                                            </small>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="fas fa-bell fa-3x text-gray-300 mb-3"></i>
+                            <p class="mb-0">Yaklaşan hatırlatıcı bulunmuyor.</p>
+                            <a href="/reminder/new" class="btn btn-primary btn-sm mt-3">
+                                <i class="fas fa-plus-circle me-1"></i> Hatırlatıcı Ekle
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Kritik Sağlık Verileri -->
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-warning text-white">
+                    <h6 class="m-0 font-weight-bold">Kritik Durumdaki Sağlık Verileri</h6>
+                    <a href="/health" class="btn btn-sm btn-light">
+                        Tüm Sağlık Verilerini Gör <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <% if (criticalHealthData && criticalHealthData.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Aile Üyesi</th>
+                                        <th>Veri Tipi</th>
+                                        <th>Değer</th>
+                                        <th>Tarih</th>
+                                        <th>İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% criticalHealthData.forEach(item => { %>
+                                        <% item.data.forEach(data => { %>
+                                            <tr>
+                                                <td><%= item.member.name %> <%= item.member.surname %></td>
+                                                <td>
+                                                    <% if (data.dataType === 'bloodSugar') { %>
+                                                        Kan Şekeri
+                                                    <% } else if (data.dataType === 'bloodPressure') { %>
+                                                        Tansiyon
+                                                    <% } else if (data.dataType === 'heartRate') { %>
+                                                        Nabız
+                                                    <% } else if (data.dataType === 'weight') { %>
+                                                        Kilo
+                                                    <% } else { %>
+                                                        <%= data.dataType %>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-danger">
+                                                    <% if (data.dataType === 'bloodSugar') { %>
+                                                        <%= data.bloodSugar.value %> mg/dL
+                                                    <% } else if (data.dataType === 'bloodPressure') { %>
+                                                        <%= data.bloodPressure.systolic %>/<%= data.bloodPressure.diastolic %> mmHg
+                                                    <% } else if (data.dataType === 'heartRate') { %>
+                                                        <%= data.heartRate.value %> bpm
+                                                    <% } else if (data.dataType === 'weight') { %>
+                                                        <%= data.weight.value %> kg
+                                                    <% } %>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(data.measuredAt).toLocaleString('tr-TR', {
+                                                        day: '2-digit',
+                                                        month: '2-digit',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    }) %>
+                                                </td>
+                                                <td>
+                                                    <a href="/health/<%= data._id %>" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-eye"></i> Detay
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <p class="mb-0">Kritik durumda sağlık verisi bulunmuyor. Bu iyi bir haber!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

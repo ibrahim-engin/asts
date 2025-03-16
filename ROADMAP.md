@@ -82,14 +82,52 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] validators.js - Doğrulama yardımcıları
 - [x] dbSeeder.js - Veritabanı başlangıç verileri
 
+## 🔴 Frontend (EJS Şablonları)
+
+### Admin Panel Görünümleri
+- [x] admin/dashboard.ejs - Admin ana panel
+- [x] admin/login.ejs - Admin girişi
+
+### Kullanıcı Görünümleri
+- [x] front/login.ejs - Kullanıcı girişi
+- [x] front/register.ejs - Kayıt sayfası
+
+### Kısmi Görünümler (Partials)
+- [x] partials/admin/footer.ejs - Admin panel footer
+- [x] partials/admin/header.ejs - Admin panel header
+- [x] partials/admin/sidebar.ejs - Admin panel sidebar
+- [x] partials/alerts.ejs - Uyarı bileşenleri
+- [x] partials/footer.ejs - Ana sayfa footer
+- [x] partials/header.ejs - Ana sayfa header
+- [x] partials/navbar.ejs - Ana sayfa navbar
+
+### Diğer Görünümler
+- [x] home.ejs - Ana sayfa
+- [x] index.ejs - Karşılama sayfası
+
+## 🔵 Frontend Varlıkları
+
+### CSS Dosyaları
+- [x] public/css/admin.css - Admin paneli stil dosyası
+- [x] public/css/all.min.css - Tamamlayıcı stil dosyası
+- [x] public/css/bootstrap.min.css - Bootstrap stil dosyası
+- [x] public/css/main.css - Ana stil dosyası
+
+### JavaScript Dosyaları
+- [x] public/js/admin.js - Admin paneli script
+- [x] public/js/bootstrap.bundle.min.js - Bootstrap Bundle script
+- [x] public/js/jquery-3.7.1.min.js - jQuery script
+- [x] public/js/main.js - Ana script
+
+### Resim Dosyaları
+- [x] public/favicon.ico - Site favicon
+
 ## 🟡 Devam Eden Görevler
 
 ## 🔴 Frontend (EJS Şablonları)
 
 ### Admin Panel Görünümleri
-- [ ] admin/dashboard.ejs - Admin ana panel
 - [ ] admin/family-members.ejs - Aile üyeleri yönetimi
-- [ ] admin/login.ejs - Admin girişi
 - [ ] admin/medications.ejs - İlaç verileri yönetimi
 - [ ] admin/reports.ejs - Raporlar sayfası
 - [ ] admin/settings.ejs - Sistem ayarları
@@ -97,50 +135,33 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 
 ### Kullanıcı Görünümleri
 - [ ] front/health-data.ejs - Sağlık verileri sayfası
-- [ ] front/login.ejs - Kullanıcı girişi
 - [ ] front/medications.ejs - İlaç takibi sayfası
 - [ ] front/medical-history.ejs - Tıbbi geçmiş sayfası
 - [ ] front/nutrition.ejs - Beslenme sayfası
 - [ ] front/physical-activity.ejs - Fiziksel aktivite sayfası
 - [ ] front/profile.ejs - Profil sayfası
-- [ ] front/register.ejs - Kayıt sayfası
 - [ ] front/reminders.ejs - Hatırlatıcılar sayfası
 - [ ] front/reports.ejs - Raporlar sayfası
 
 ### Kısmi Görünümler (Partials)
-- [ ] partials/admin/footer.ejs - Admin panel footer
-- [ ] partials/admin/header.ejs - Admin panel header
-- [ ] partials/admin/sidebar.ejs - Admin panel sidebar
-- [ ] partials/alerts.ejs - Uyarı bileşenleri
 - [ ] partials/charts.ejs - Grafik bileşenleri
-- [ ] partials/footer.ejs - Ana sayfa footer
-- [ ] partials/header.ejs - Ana sayfa header
 - [ ] partials/modals.ejs - Modal bileşenleri
-- [ ] partials/navbar.ejs - Ana sayfa navbar
 
 ### Diğer Görünümler
 - [ ] 404.ejs - 404 hata sayfası
 - [ ] 500.ejs - 500 hata sayfası
 - [ ] error.ejs - Genel hata sayfası
-- [ ] home.ejs - Ana sayfa
-- [ ] index.ejs - Karşılama sayfası
 
 ## 🔵 Frontend Varlıkları
 
 ### CSS Dosyaları
-- [ ] public/css/admin.css - Admin paneli stil dosyası
-- [ ] public/css/bootstrap.min.css - Bootstrap stil dosyası
 - [ ] public/css/chart.min.css - Grafik stil dosyası
-- [ ] public/css/main.css - Ana stil dosyası
 
 ### JavaScript Dosyaları
-- [ ] public/js/admin.js - Admin paneli script
-- [ ] public/js/bootstrap.min.js - Bootstrap script
 - [ ] public/js/chart.min.js - Grafik script
 - [ ] public/js/dashboard.js - Panel script
 - [ ] public/js/healthdata.js - Sağlık verisi script
 - [ ] public/js/jquery.min.js - jQuery script
-- [ ] public/js/main.js - Ana script
 - [ ] public/js/reminders.js - Hatırlatıcılar script
 - [ ] public/js/reports.js - Raporlar script
 
@@ -148,7 +169,6 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [ ] public/img/icons/ - Sistem ikonları
 - [ ] public/img/logos/ - Logo görselleri
 - [ ] public/img/placeholders/ - Yer tutucu görseller
-- [ ] public/favicon.ico - Site favicon
 
 ## 📋 Test ve Dağıtım
 
@@ -177,6 +197,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **16 Mart 2025** - Routes Dosyaları oluşturuldu.
 - **16 Mart 2025** - Servis Dosyaları oluşturuldu.
 - **16 Mart 2025** - Utilty Dosyaları oluşturuldu.
+- **17 Mart 2025** - Front-End Dosyalarının Bir Kısmı oluşturuldu.
 
 ---
 

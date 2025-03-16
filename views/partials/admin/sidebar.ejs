@@ -1,0 +1,73 @@
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h3>ASTS Admin</h3>
+        <strong>ASTS</strong>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="<%= req.path === '/' + process.env.ADMIN_PAGE_URL + '/dashboard' ? 'active' : '' %>">
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+        </li>
+        <li class="<%= req.path.startsWith('/' + process.env.ADMIN_PAGE_URL + '/users') ? 'active' : '' %>">
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/users">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Kullanıcılar</span>
+            </a>
+        </li>
+        <li class="<%= req.path.startsWith('/' + process.env.ADMIN_PAGE_URL + '/family-members') ? 'active' : '' %>">
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/family-members">
+                <i class="fas fa-user-friends"></i>
+                <span class="menu-text">Aile Üyeleri</span>
+            </a>
+        </li>
+        <li>
+            <a href="#healthSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-heartbeat"></i>
+                <span class="menu-text">Sağlık Verileri</span>
+            </a>
+            <ul class="collapse list-unstyled" id="healthSubmenu">
+                <li>
+                    <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data">
+                        <i class="fas fa-database"></i>
+                        <span class="menu-text">Tüm Veriler</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/<%= process.env.ADMIN_PAGE_URL %>/health-data/analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="menu-text">Analitik</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/medications">
+                <i class="fas fa-pills"></i>
+                <span class="menu-text">İlaçlar</span>
+            </a>
+        </li>
+        <li>
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/reports">
+                <i class="fas fa-file-alt"></i>
+                <span class="menu-text">Raporlar</span>
+            </a>
+        </li>
+        <li>
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/settings">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Ayarlar</span>
+            </a>
+        </li>
+        <% if (locals.admin && locals.admin.level === 'super-admin') { %>
+        <li>
+            <a href="/<%= process.env.ADMIN_PAGE_URL %>/admins">
+                <i class="fas fa-user-shield"></i>
+                <span class="menu-text">Adminler</span>
+            </a>
+        </li>
+        <% } %>
+    </ul>
+</nav>

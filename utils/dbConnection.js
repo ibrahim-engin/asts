@@ -13,6 +13,9 @@ const config = require('../config');
 // Mongoose Promise'i global Promise'e ayarla
 mongoose.Promise = global.Promise;
 
+// Mongoose strictQuery
+// mongoose.set('strictQuery', false); // veya false
+
 // Bağlantı durumları
 const CONNECTION_STATES = {
   0: 'disconnected',
@@ -198,6 +201,10 @@ const getCollectionStats = async (collectionName) => {
     if (mongoose.connection.readyState !== 1) {
       throw new Error('Veritabanı bağlantısı kurulu değil');
     }
+
+    // MongoDB bağlantısı öncesine
+    console.log('MongoDB bağlantısı kuruluyor...');
+    console.log('Bağlantı URI:', process.env.MONGODB_URI);
 
     const db = mongoose.connection.db;
     const stats = await db.collection(collectionName).stats();

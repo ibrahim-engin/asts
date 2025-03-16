@@ -1,0 +1,77 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="<%= locals.user ? '/home' : '/' %>">
+            <img src="/img/logos/asts-logo.png" alt="ASTS Logo" height="30" class="d-inline-block align-text-top me-2">
+            ASTS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <% if (locals.user) { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path === '/home' ? 'active' : '' %>" href="/home">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sağlık Verileri
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="healthDropdown">
+                            <li><a class="dropdown-item" href="/health">Tüm Veriler</a></li>
+                            <li><a class="dropdown-item" href="/health/new">Yeni Veri Ekle</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/health/blood-sugar">Kan Şekeri</a></li>
+                            <li><a class="dropdown-item" href="/health/blood-pressure">Tansiyon</a></li>
+                            <li><a class="dropdown-item" href="/health/weight">Kilo</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path.startsWith('/medication') ? 'active' : '' %>" href="/medication">İlaç Takibi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path.startsWith('/reminder') ? 'active' : '' %>" href="/reminder">Hatırlatıcılar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path.startsWith('/report') ? 'active' : '' %>" href="/report">Raporlar</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path === '/' ? 'active' : '' %>" href="/">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Özellikler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Hakkında</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">İletişim</a>
+                    </li>
+                <% } %>
+            </ul>
+            <ul class="navbar-nav">
+                <% if (locals.user) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> <%= locals.user.name %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/user/profile"><i class="fas fa-user me-2"></i> Profil</a></li>
+                            <li><a class="dropdown-item" href="/user/settings"><i class="fas fa-cog me-2"></i> Ayarlar</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i> Çıkış Yap</a></li>
+                        </ul>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path === '/auth/login' ? 'active' : '' %>" href="/auth/login">Giriş Yap</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= req.path === '/auth/register' ? 'active' : '' %>" href="/auth/register">Kayıt Ol</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
