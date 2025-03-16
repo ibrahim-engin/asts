@@ -198,6 +198,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **16 Mart 2025** - Servis Dosyaları oluşturuldu.
 - **16 Mart 2025** - Utilty Dosyaları oluşturuldu.
 - **17 Mart 2025** - Front-End Dosyalarının Bir Kısmı oluşturuldu.
+- **17 Mart 2025** - Programın localhost ta çalışması sağlandı.
 
 ---
 
