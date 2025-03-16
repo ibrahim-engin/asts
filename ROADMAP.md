@@ -49,20 +49,20 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - [x] reportController.js - Raporlama işlemleri
 - [x] userController.js - Kullanıcı yönetimi
 
-## 🟡 Devam Eden Görevler
-
 ### Route Dosyaları
-- [ ] adminRoutes.js - Admin panel rotaları
-- [ ] apiRoutes.js - API rotaları (mobil için)
-- [ ] authRoutes.js - Kimlik doğrulama rotaları
-- [ ] dashboardRoutes.js - Panel rotaları
-- [ ] healthDataRoutes.js - Sağlık verisi rotaları
-- [ ] medicationRoutes.js - İlaç takibi rotaları
-- [ ] nutritionRoutes.js - Beslenme verisi rotaları
-- [ ] physicalActivityRoutes.js - Fiziksel aktivite rotaları
-- [ ] reminderRoutes.js - Hatırlatıcı rotaları
-- [ ] reportRoutes.js - Rapor rotaları
-- [ ] userRoutes.js - Kullanıcı rotaları
+- [x] adminRoutes.js - Admin panel rotaları
+- [x] apiRoutes.js - API rotaları (mobil için)
+- [x] authRoutes.js - Kimlik doğrulama rotaları
+- [x] dashboardRoutes.js - Panel rotaları
+- [x] healthDataRoutes.js - Sağlık verisi rotaları
+- [x] medicationRoutes.js - İlaç takibi rotaları
+- [x] nutritionRoutes.js - Beslenme verisi rotaları
+- [x] physicalActivityRoutes.js - Fiziksel aktivite rotaları
+- [x] reminderRoutes.js - Hatırlatıcı rotaları
+- [x] reportRoutes.js - Rapor rotaları
+- [x] userRoutes.js - Kullanıcı rotaları
+
+## 🟡 Devam Eden Görevler
 
 ### Servis Dosyaları
 - [ ] cacheService.js - Önbellek servisi
@@ -172,6 +172,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **15 Mart 2025** - Veritabanı Modelleri ve dosyalar oluşturuldu.
 - **15 Mart 2025** - Middleware Dosyaları oluşturuldu.
 - **16 Mart 2025** - Controller Dosyaları oluşturuldu.
+- **16 Mart 2025** - Routes Dosyaları oluşturuldu.
 
 ---
 
