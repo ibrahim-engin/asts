@@ -91,6 +91,7 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 ### Kullanıcı Görünümleri
 - [x] front/login.ejs - Kullanıcı girişi
 - [x] front/register.ejs - Kayıt sayfası
+- [x] front/first-family-member.ejs - Aile üyesi ekleme sayfası 
 
 ### Kısmi Görünümler (Partials)
 - [x] partials/admin/footer.ejs - Admin panel footer
@@ -199,6 +200,8 @@ Bu belge, Aile Sağlık Takip Sistemi (ASTS) projesinin gelişim sürecini takip
 - **16 Mart 2025** - Utilty Dosyaları oluşturuldu.
 - **17 Mart 2025** - Front-End Dosyalarının Bir Kısmı oluşturuldu.
 - **17 Mart 2025** - Programın localhost ta çalışması sağlandı.
+- **17 Mart 2025** - Üyelik ekleme ekranı aktif edildi.
+- **17 Mart 2025** - Aile Üyesi Ekeleme ekranı aktif edildi.
 
 ---
 
