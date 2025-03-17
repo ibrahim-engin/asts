@@ -121,6 +121,7 @@ const physicalActivityRoutes = require('./routes/physicalActivityRoutes');
 const reminderRoutes = require('./routes/reminderRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes'); // Bu satırı ekleyin
 
 // Route'ları uygulama
 app.use('/auth', authRoutes);
@@ -133,8 +134,9 @@ app.use('/activity', physicalActivityRoutes);
 app.use('/reminder', reminderRoutes);
 app.use('/report', reportRoutes);
 app.use('/api', apiRoutes);
+app.use('/dashboard', dashboardRoutes); // Bu satırı ekleyin
 
-// Ana sayfa rotası
+// Ana sayfa rotası - bu kısmı değiştirmeyin
 app.get('/', (req, res) => {
   if (req.session.user) {
     return res.redirect('/home');
@@ -142,12 +144,14 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-// Home page
+// Home page - bu satırı aşağıdaki gibi değiştirin
 app.get('/home', (req, res) => {
   if (!req.session.user) {
     return res.redirect('/auth/login');
   }
-  res.render('home');
+  
+  // Doğrudan dashboard controller'a yönlendir
+  res.redirect('/dashboard');
 });
 
 // 404 Sayfası

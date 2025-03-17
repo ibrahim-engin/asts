@@ -1,0 +1,154 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i> İlk Aile Üyenizi Ekleyin</h4>
+                </div>
+                <div class="card-body">
+                    <%- include('../partials/alerts') %>
+                    
+                    <div class="text-center mb-4">
+                        <img src="/img/placeholders/family.png" alt="Aile" class="img-fluid mb-3" style="max-width: 200px;">
+                        <h5>Hoş Geldiniz!</h5>
+                        <p class="text-muted">Aile Sağlık Takip Sistemi'ni kullanmaya başlamak için lütfen ilk aile üyenizi ekleyin.</p>
+                        <p class="text-muted small">İsterseniz kendinizi de aile üyesi olarak ekleyebilirsiniz.</p>
+                    </div>
+                    
+                    <form action="/user/family" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Ad <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="surname" class="form-label">Soyad <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="surname" name="surname" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="relationship" class="form-label">İlişki <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="relationship" name="relationship" required>
+                                        <option value="" selected disabled>Seçiniz</option>
+                                        <option value="anne">Anne</option>
+                                        <option value="baba">Baba</option>
+                                        <option value="eş">Eş</option>
+                                        <option value="çocuk">Çocuk</option>
+                                        <option value="kardeş">Kardeş</option>
+                                        <option value="anneanne">Anneanne</option>
+                                        <option value="babaanne">Babaanne</option>
+                                        <option value="dede">Dede</option>
+                                        <option value="torun">Torun</option>
+                                        <option value="diğer">Diğer (Kendim)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="dateOfBirth" class="form-label">Doğum Tarihi <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Cinsiyet <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="" selected disabled>Seçiniz</option>
+                                        <option value="kadın">Kadın</option>
+                                        <option value="erkek">Erkek</option>
+                                        <option value="diğer">Diğer</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="bloodType" class="form-label">Kan Grubu</label>
+                                    <select class="form-select" id="bloodType" name="bloodType">
+                                        <option value="bilinmiyor" selected>Bilinmiyor</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="0+">0+</option>
+                                        <option value="0-">0-</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="height" class="form-label">Boy (cm)</label>
+                                    <input type="number" class="form-control" id="height" name="height" min="1" max="250">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="weight" class="form-label">Kilo (kg)</label>
+                                    <input type="number" class="form-control" id="weight" name="weight" min="1" max="500" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Profil Fotoğrafı</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notlar</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Aile Üyesini Kaydet
+                            </button>
+                            <a href="/auth/logout" class="btn btn-outline-secondary">
+                                <i class="fas fa-sign-out-alt me-2"></i> Çıkış Yap
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tarih alanı için bugünden daha eski bir tarihin seçilmesini sağla
+    const dateOfBirthInput = document.getElementById('dateOfBirth');
+    if (dateOfBirthInput) {
+        // Bugünün tarihini al
+        const today = new Date();
+        
+        // YYYY-MM-DD formatına dönüştür
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        
+        // Maksimum değeri bugün olarak ayarla
+        dateOfBirthInput.max = `${year}-${month}-${day}`;
+        
+        // Varsayılan değeri bugünden 30 yıl önce olarak ayarla
+        const defaultYear = year - 30;
+        dateOfBirthInput.value = `${defaultYear}-${month}-${day}`;
+    }
+</script>
+
+<%- include('../partials/footer') %>

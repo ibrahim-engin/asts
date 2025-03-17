@@ -3,23 +3,30 @@
  * Kullanıcı veya admin girişi var mı kontrol eder
  */
 exports.isAuthenticated = (req, res, next) => {
-    if (!req.user && !req.admin) {
-      // API isteği ise JSON dön
-      if (req.originalUrl.startsWith('/api')) {
-        return res.status(401).json({
-          success: false,
-          error: 'Bu işlemi gerçekleştirmek için giriş yapmalısınız'
-        });
-      }
-      
-      // İstek URL'ini kaydet (giriş sonrası bu sayfaya dönmek için)
-      req.session.returnTo = req.originalUrl;
-      req.flash('error_msg', 'Bu sayfaya erişmek için giriş yapmalısınız');
-      return res.redirect('/auth/login');
+  // Hem req.user (JWT kontrolü için) hem de req.session.user (Sessions kontrolü için) kontrol et
+  if (!req.user && !req.admin && !req.session.user) {
+    // API isteği ise JSON dön
+    if (req.originalUrl.startsWith('/api')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Bu işlemi gerçekleştirmek için giriş yapmalısınız'
+      });
     }
-  
-    next();
-  };
+    
+    // İstek URL'ini kaydet (giriş sonrası bu sayfaya dönmek için)
+    req.session.returnTo = req.originalUrl;
+    req.flash('error_msg', 'Bu sayfaya erişmek için giriş yapmalısınız');
+    return res.redirect('/auth/login');
+  }
+
+  // Eğer req.user yoksa ama req.session.user varsa, req.user'a aktarıyoruz
+  // Bu, JWT ve session karışımı bir kimlik doğrulama kullandığınız durumları destekler
+  if (!req.user && req.session.user) {
+    req.user = req.session.user;
+  }
+
+  next();
+};
   
   /**
    * Giriş yapılmadığını kontrol eden middleware

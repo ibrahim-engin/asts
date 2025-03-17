@@ -21,95 +21,73 @@ exports.getLogin = (req, res) => {
 
 /**
  * Kullanıcı giriş işlemi
- * @route   POST /auth/login
- * @access  Public
+ * @route POST /auth/login
+ * @access Public
  */
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password, remember } = req.body;
-    
-    // Kullanıcıyı e-posta ile bul
+
+    // E-posta ve şifre kontrolü
+    if (!email || !password) {
+      req.flash('error_msg', 'Lütfen tüm alanları doldurun');
+      return res.redirect('/auth/login');
+    }
+
+    // Kullanıcıyı bul
     const user = await User.findOne({ email }).select('+password');
-    
+
     if (!user) {
       req.flash('error_msg', 'Geçersiz e-posta veya şifre');
       return res.redirect('/auth/login');
     }
-    
-    // Kullanıcı aktif değilse
+
+    // Kullanıcı aktif mi?
     if (!user.isActive) {
-      logWarning('Devre dışı hesaba giriş denemesi', {
-        email,
-        userId: user._id,
-        ip: req.ip
-      });
-      
       req.flash('error_msg', 'Hesabınız devre dışı bırakılmış. Lütfen yönetici ile iletişime geçin.');
       return res.redirect('/auth/login');
     }
-    
+
     // Şifre kontrolü
     const isMatch = await user.matchPassword(password);
-    
+
     if (!isMatch) {
-      logWarning('Başarısız giriş denemesi - Yanlış şifre', {
-        email,
-        userId: user._id,
-        ip: req.ip
-      });
-      
       req.flash('error_msg', 'Geçersiz e-posta veya şifre');
       return res.redirect('/auth/login');
     }
-    
-    // Son giriş tarihini güncelle
-    user.lastLogin = Date.now();
-    await user.save({ validateBeforeSave: false });
-    
+
     // JWT token oluştur
     const token = user.getSignedJwtToken();
-    
-    // Cookie seçenekleri
-    const cookieOptions = { ...config.jwt.cookieOptions };
-    
-    // "Beni hatırla" seçeneği için cookie süresini uzat
-    if (remember) {
-      cookieOptions.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 gün
-    }
-    
-    // Token'ı cookie olarak gönder
-    res.cookie(config.jwt.cookieName, token, cookieOptions);
-    
-    // Kullanıcı bilgilerini session'a ekle
+
+    // Session'a kullanıcı bilgilerini kaydet
     req.session.user = {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       surname: user.surname,
       email: user.email,
       role: user.role
     };
     
-    // Log kaydı
-    logInfo('Kullanıcı giriş yaptı', {
-      userId: user._id,
-      email: user.email,
-      ip: req.ip
-    });
-    
-    // Kullanıcı ayarları yoksa oluştur
-    const userSettings = await Settings.findOne({ userId: user._id });
-    if (!userSettings) {
-      await Settings.create({ userId: user._id });
-    }
-    
-    // Yönlendirme
-    const redirectUrl = req.session.returnTo || '/home';
+    // JWT token'ı cookie'ye kaydet
+    res.cookie(config.jwt.cookieName, token, config.jwt.cookieOptions);
+
+    // Son giriş tarihini güncelle
+    user.lastLogin = Date.now();
+    await user.save({ validateBeforeSave: false });
+
+    // Giriş yapıldığını logla
+    logInfo('Kullanıcı giriş yaptı', { userId: user._id, email: user.email });
+
+    // Giriş başarılı mesajı
+    req.flash('success_msg', 'Başarıyla giriş yaptınız');
+
+    // Kullanıcıyı yönlendir
+    const redirectUrl = req.session.returnTo || '/dashboard';
     delete req.session.returnTo;
     
     res.redirect(redirectUrl);
   } catch (error) {
-    logError(error, req);
-    
+    logError('Giriş hatası', error);
     req.flash('error_msg', 'Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
     res.redirect('/auth/login');
   }
