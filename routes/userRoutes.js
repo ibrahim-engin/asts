@@ -12,6 +12,9 @@ router.get('/profile', userController.getProfile);
 router.get('/profile/edit', userController.getEditProfile);
 router.put('/profile', simpleUpload.single('avatar'), userController.updateProfile);
 
+// Kullanıcı profilini güncelleme - profil formundan gelen POST istekleri için
+router.post('/profile', simpleUpload.single('avatar'), userController.updateProfile);
+
 // Şifre değiştirme
 router.get('/change-password', userController.getChangePassword);
 router.post('/change-password', userController.changePassword);

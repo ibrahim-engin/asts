@@ -44,15 +44,21 @@ process.on('uncaughtException', (err) => {
 });
 
 // Güvenlik ayarları
+//  app.use(helmet({
+//   contentSecurityPolicy: {
+//     directives: {
+//       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+//       "script-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "code.jquery.com"],
+//       "img-src": ["'self'", "data:"],
+//     },
+//   },
+// }));
+
+// Güvenlik ayarları
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      "script-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "code.jquery.com"],
-      "img-src": ["'self'", "data:"],
-    },
-  },
+  contentSecurityPolicy: false // Geçici olarak devre dışı bırak
 }));
+
 app.use(cors());
 
 // Body parser middleware
@@ -93,7 +99,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Statik dosyalar
+app.use('/css', express.static(path.join(__dirname, 'public/css')));
+app.use('/img', express.static(path.join(__dirname, 'public/img')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 // View engine ayarları
 app.set('view engine', 'ejs');
@@ -168,9 +179,9 @@ app.use((err, req, res, next) => {
 });
 
 // Portu dinleme
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Sunucu ${process.env.NODE_ENV} modunda ${PORT} portunda çalışıyor`.yellow.bold);
+const PORT = process.env.PORT || 80;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Sunucu ${process.env.NODE_ENV} modunda ${PORT} portunda tüm arayüzlerde çalışıyor`.yellow.bold);
 });
 
 // Beklenmeyen hatalar için

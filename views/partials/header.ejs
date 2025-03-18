@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= typeof title !== 'undefined' ? title + ' - ASTS' : 'Aile Sağlık Takip Sistemi' %></title>
+    <!-- Base URL - Farklı IP üzerinden erişim için -->
+    <base href="<%= req.protocol %>://<%= req.get('host') %>/">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="/css/all.min.css">
+    <link rel="stylesheet" href="css/all.min.css">
     <!-- Ana Stil Dosyası -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="css/main.css">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="/css/all.min.css">
-    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/all.min.css">
+    <!-- Font Awesome CDN (Yedek) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>

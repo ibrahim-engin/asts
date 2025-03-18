@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
+const mongoose = require('mongoose');
+
 /**
  * Kullanıcı profil sayfası
  * @route   GET /user/profile
@@ -25,11 +27,46 @@ exports.getProfile = async (req, res) => {
     // Aile üyelerini bul
     const familyMembers = await FamilyMember.find({ userId: req.user._id, isActive: true });
     
+    // Kullanıcının aktivite istatistiklerini hesapla
+    const activityStats = {
+      healthData: 0,
+      medications: 0,
+      reminders: 0
+    };
+    
+    // Sağlık verilerini topla
+    const HealthData = mongoose.model('HealthData');
+    if (HealthData) {
+      const healthDataCount = await HealthData.countDocuments({
+        familyMemberId: { $in: familyMembers.map(member => member._id) }
+      });
+      activityStats.healthData = healthDataCount;
+    }
+    
+    // İlaç kayıtlarını topla
+    const Medication = mongoose.model('Medication');
+    if (Medication) {
+      const medicationCount = await Medication.countDocuments({
+        familyMemberId: { $in: familyMembers.map(member => member._id) }
+      });
+      activityStats.medications = medicationCount;
+    }
+    
+    // Hatırlatıcıları topla
+    const Reminder = mongoose.model('Reminder');
+    if (Reminder) {
+      const reminderCount = await Reminder.countDocuments({
+        familyMemberId: { $in: familyMembers.map(member => member._id) }
+      });
+      activityStats.reminders = reminderCount;
+    }
+    
     // Profil sayfasını render et
     res.render('front/profile', {
       title: 'Profil',
       user,
-      familyMembers
+      familyMembers,
+      activityStats
     });
   } catch (error) {
     logError(error, req);
@@ -109,21 +146,35 @@ exports.updateProfile = async (req, res) => {
     
     // Profil fotoğrafı yüklendiyse
     if (req.file) {
+      console.log("Uploaded file:", req.file);
+      
       // Eski profil fotoğrafını sil (varsayılan fotoğraf değilse)
       if (user.avatar && user.avatar !== 'default-avatar.png') {
         const oldAvatarPath = path.join(__dirname, '../public/uploads/profiles', user.avatar);
+        console.log("Old avatar path:", oldAvatarPath);
         
+        // Dosya gerçekten var mı kontrol et
         if (fs.existsSync(oldAvatarPath)) {
-          fs.unlinkSync(oldAvatarPath);
+          try {
+            fs.unlinkSync(oldAvatarPath);
+            console.log("Deleted old avatar successfully");
+          } catch (unlinkError) {
+            console.error("Error deleting old avatar:", unlinkError);
+            // Dosya silme hatası kritik değil, devam et
+          }
+        } else {
+          console.log("Old avatar file does not exist");
         }
       }
       
       // Yeni profil fotoğrafını kaydet
       user.avatar = req.file.filename;
+      console.log("New avatar filename:", user.avatar);
     }
     
     // Kullanıcıyı kaydet
     await user.save();
+    console.log("User updated successfully");
     
     // Log kaydı
     logInfo('Kullanıcı profili güncellendi', {

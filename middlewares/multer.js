@@ -360,10 +360,11 @@ const upload = {
 // router.post('/upload', upload.single, handleMulterError, (req, res) => { ... });
 
 // Yeni export - multer örneğini direkt export ediyoruz
+// Profil resmi yükleme için multer yapılandırması
 const simpleUpload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const dest = path.join(__dirname, '../public/uploads/general');
+      const dest = path.join(__dirname, '../public/uploads/profiles');
       if (!fs.existsSync(dest)) {
         fs.mkdirSync(dest, { recursive: true });
       }
@@ -372,11 +373,17 @@ const simpleUpload = multer({
     filename: (req, file, cb) => {
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
       const extension = path.extname(file.originalname).toLowerCase();
-      cb(null, `file-${uniqueSuffix}${extension}`);
+      cb(null, `profile-${uniqueSuffix}${extension}`);
     }
   }),
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
+
+const profileUploadsDir = path.join(__dirname, '../public/uploads/profiles');
+if (!fs.existsSync(profileUploadsDir)) {
+  fs.mkdirSync(profileUploadsDir, { recursive: true });
+  console.log("Created profiles upload directory:", profileUploadsDir);
+}
 
 module.exports = {
   upload, // Mevcut konfigürasyon

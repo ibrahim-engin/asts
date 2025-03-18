@@ -1,0 +1,501 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i> Aile Üyesi Düzenleme</h5>
+                </div>
+                <div class="card-body">
+                    <%- include('../partials/alerts') %>
+                    
+                    <form action="/user/family/<%= familyMember._id %>" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="_method" value="PUT">
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-3 text-center mb-4 mb-md-0">
+                                <div class="avatar-upload">
+                                    <div class="avatar-preview mb-3">
+                                        <% if (familyMember.avatar && familyMember.avatar !== 'default-member-avatar.png') { %>
+                                            <img src="/uploads/profiles/<%= familyMember.avatar %>" alt="<%= familyMember.name %>" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                        <% } else { %>
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px; font-size: 3rem;">
+                                                <%= familyMember.name.charAt(0) %><%= familyMember.surname.charAt(0) %>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    <div class="avatar-edit">
+                                        <label for="avatar" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-camera me-1"></i> Fotoğraf Değiştir
+                                        </label>
+                                        <input type="file" id="avatar" name="avatar" accept="image/*" class="d-none">
+                                        <div id="avatar-name" class="small text-muted mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Ad <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name" value="<%= familyMember.name %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="surname" class="form-label">Soyad <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="surname" name="surname" value="<%= familyMember.surname %>" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="relationship" class="form-label">İlişki <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="relationship" name="relationship" required>
+                                            <option value="" disabled>Seçiniz</option>
+                                            <option value="anne" <%= familyMember.relationship === 'anne' ? 'selected' : '' %>>Anne</option>
+                                            <option value="baba" <%= familyMember.relationship === 'baba' ? 'selected' : '' %>>Baba</option>
+                                            <option value="eş" <%= familyMember.relationship === 'eş' ? 'selected' : '' %>>Eş</option>
+                                            <option value="çocuk" <%= familyMember.relationship === 'çocuk' ? 'selected' : '' %>>Çocuk</option>
+                                            <option value="kardeş" <%= familyMember.relationship === 'kardeş' ? 'selected' : '' %>>Kardeş</option>
+                                            <option value="anneanne" <%= familyMember.relationship === 'anneanne' ? 'selected' : '' %>>Anneanne</option>
+                                            <option value="babaanne" <%= familyMember.relationship === 'babaanne' ? 'selected' : '' %>>Babaanne</option>
+                                            <option value="dede" <%= familyMember.relationship === 'dede' ? 'selected' : '' %>>Dede</option>
+                                            <option value="torun" <%= familyMember.relationship === 'torun' ? 'selected' : '' %>>Torun</option>
+                                            <option value="diğer" <%= familyMember.relationship === 'diğer' ? 'selected' : '' %>>Diğer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="dateOfBirth" class="form-label">Doğum Tarihi <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" value="<%= new Date(familyMember.dateOfBirth).toISOString().split('T')[0] %>" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="gender" class="form-label">Cinsiyet <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="gender" name="gender" required>
+                                            <option value="" disabled>Seçiniz</option>
+                                            <option value="kadın" <%= familyMember.gender === 'kadın' ? 'selected' : '' %>>Kadın</option>
+                                            <option value="erkek" <%= familyMember.gender === 'erkek' ? 'selected' : '' %>>Erkek</option>
+                                            <option value="diğer" <%= familyMember.gender === 'diğer' ? 'selected' : '' %>>Diğer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="bloodType" class="form-label">Kan Grubu</label>
+                                        <select class="form-select" id="bloodType" name="bloodType">
+                                            <option value="bilinmiyor" <%= familyMember.bloodType === 'bilinmiyor' ? 'selected' : '' %>>Bilinmiyor</option>
+                                            <option value="A+" <%= familyMember.bloodType === 'A+' ? 'selected' : '' %>>A+</option>
+                                            <option value="A-" <%= familyMember.bloodType === 'A-' ? 'selected' : '' %>>A-</option>
+                                            <option value="B+" <%= familyMember.bloodType === 'B+' ? 'selected' : '' %>>B+</option>
+                                            <option value="B-" <%= familyMember.bloodType === 'B-' ? 'selected' : '' %>>B-</option>
+                                            <option value="AB+" <%= familyMember.bloodType === 'AB+' ? 'selected' : '' %>>AB+</option>
+                                            <option value="AB-" <%= familyMember.bloodType === 'AB-' ? 'selected' : '' %>>AB-</option>
+                                            <option value="0+" <%= familyMember.bloodType === '0+' ? 'selected' : '' %>>0+</option>
+                                            <option value="0-" <%= familyMember.bloodType === '0-' ? 'selected' : '' %>>0-</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="height" class="form-label">Boy (cm)</label>
+                                        <input type="number" class="form-control" id="height" name="height" min="1" max="250" value="<%= familyMember.height || '' %>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="weight" class="form-label">Kilo (kg)</label>
+                                        <input type="number" class="form-control" id="weight" name="weight" min="1" max="500" step="0.1" value="<%= familyMember.weight || '' %>">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notlar</label>
+                                    <textarea class="form-control" id="notes" name="notes" rows="3"><%= familyMember.notes || '' %></textarea>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Acil Durum Bilgileri</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="emergencyContact.name" class="form-label">İletişim Kişisi</label>
+                                                <input type="text" class="form-control" id="emergencyContact.name" name="emergencyContact.name" value="<%= familyMember.emergencyContact ? familyMember.emergencyContact.name : '' %>">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="emergencyContact.phone" class="form-label">Telefon</label>
+                                                <input type="tel" class="form-control" id="emergencyContact.phone" name="emergencyContact.phone" value="<%= familyMember.emergencyContact ? familyMember.emergencyContact.phone : '' %>">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="emergencyContact.relationship" class="form-label">İlişki</label>
+                                                <input type="text" class="form-control" id="emergencyContact.relationship" name="emergencyContact.relationship" value="<%= familyMember.emergencyContact ? familyMember.emergencyContact.relationship : '' %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h6 class="mb-0">Alerji Bilgileri</h6>
+                                            <button type="button" class="btn btn-sm btn-primary" id="addAllergyBtn">
+                                                <i class="fas fa-plus me-1"></i> Alerji Ekle
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="allergiesContainer">
+                                            <% if (familyMember.allergies && familyMember.allergies.length > 0) { %>
+                                                <% familyMember.allergies.forEach((allergy, index) => { %>
+                                                    <div class="allergy-item border rounded p-3 mb-2">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <h6 class="mb-0">Alerji #<%= index + 1 %></h6>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger remove-allergy-btn">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-2">
+                                                                <label class="form-label">Tür</label>
+                                                                <select class="form-select" name="allergies[<%= index %>][type]">
+                                                                    <option value="ilaç" <%= allergy.type === 'ilaç' ? 'selected' : '' %>>İlaç</option>
+                                                                    <option value="gıda" <%= allergy.type === 'gıda' ? 'selected' : '' %>>Gıda</option>
+                                                                    <option value="böcek" <%= allergy.type === 'böcek' ? 'selected' : '' %>>Böcek</option>
+                                                                    <option value="çevresel" <%= allergy.type === 'çevresel' ? 'selected' : '' %>>Çevresel</option>
+                                                                    <option value="diğer" <%= allergy.type === 'diğer' ? 'selected' : '' %>>Diğer</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <label class="form-label">Alerji Adı</label>
+                                                                <input type="text" class="form-control" name="allergies[<%= index %>][name]" value="<%= allergy.name %>">
+                                                            </div>
+                                                            <div class="col-md-4 mb-2">
+                                                                <label class="form-label">Şiddet</label>
+                                                                <select class="form-select" name="allergies[<%= index %>][severity]">
+                                                                    <option value="hafif" <%= allergy.severity === 'hafif' ? 'selected' : '' %>>Hafif</option>
+                                                                    <option value="orta" <%= allergy.severity === 'orta' ? 'selected' : '' %>>Orta</option>
+                                                                    <option value="şiddetli" <%= allergy.severity === 'şiddetli' ? 'selected' : '' %>>Şiddetli</option>
+                                                                    <option value="ölümcül" <%= allergy.severity === 'ölümcül' ? 'selected' : '' %>>Ölümcül</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <label class="form-label">Notlar</label>
+                                                                <textarea class="form-control" name="allergies[<%= index %>][notes]" rows="2"><%= allergy.notes || '' %></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <div class="text-center py-3">
+                                                    <p class="text-muted mb-0">Alerji bilgisi bulunamadı. Eklemek için "Alerji Ekle" butonunu kullanabilirsiniz.</p>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-4">
+                                    <div class="card-header bg-light">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h6 class="mb-0">Kronik Hastalıklar</h6>
+                                            <button type="button" class="btn btn-sm btn-primary" id="addChronicDiseaseBtn">
+                                                <i class="fas fa-plus me-1"></i> Hastalık Ekle
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="chronicDiseasesContainer">
+                                            <% if (familyMember.chronicDiseases && familyMember.chronicDiseases.length > 0) { %>
+                                                <% familyMember.chronicDiseases.forEach((disease, index) => { %>
+                                                    <div class="disease-item border rounded p-3 mb-2">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <h6 class="mb-0">Hastalık #<%= index + 1 %></h6>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger remove-disease-btn">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="form-label">Hastalık Adı</label>
+                                                                <input type="text" class="form-control" name="chronicDiseases[<%= index %>][name]" value="<%= disease.name %>">
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="form-label">Tanı Tarihi</label>
+                                                                <input type="date" class="form-control" name="chronicDiseases[<%= index %>][diagnosisDate]" 
+                                                                    value="<%= disease.diagnosisDate ? new Date(disease.diagnosisDate).toISOString().split('T')[0] : '' %>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-12">
+                                                                <label class="form-label">İlaçlar</label>
+                                                                <input type="text" class="form-control" name="chronicDiseases[<%= index %>][medications]" 
+                                                                    value="<%= Array.isArray(disease.medications) ? disease.medications.join(', ') : disease.medications || '' %>">
+                                                                <div class="form-text">Birden fazla ilacı virgülle ayırarak yazabilirsiniz.</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <label class="form-label">Notlar</label>
+                                                                <textarea class="form-control" name="chronicDiseases[<%= index %>][notes]" rows="2"><%= disease.notes || '' %></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <div class="text-center py-3">
+                                                    <p class="text-muted mb-0">Kronik hastalık bilgisi bulunamadı. Eklemek için "Hastalık Ekle" butonunu kullanabilirsiniz.</p>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <a href="/user/family" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-1"></i> Geri
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Değişiklikleri Kaydet
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerji Template -->
+<template id="allergyTemplate">
+    <div class="allergy-item border rounded p-3 mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="mb-0">Yeni Alerji</h6>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-allergy-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label class="form-label">Tür</label>
+                <select class="form-select" name="allergies[INDEX][type]">
+                    <option value="ilaç">İlaç</option>
+                    <option value="gıda">Gıda</option>
+                    <option value="böcek">Böcek</option>
+                    <option value="çevresel">Çevresel</option>
+                    <option value="diğer">Diğer</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label">Alerji Adı</label>
+                <input type="text" class="form-control" name="allergies[INDEX][name]">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label">Şiddet</label>
+                <select class="form-select" name="allergies[INDEX][severity]">
+                    <option value="hafif">Hafif</option>
+                    <option value="orta" selected>Orta</option>
+                    <option value="şiddetli">Şiddetli</option>
+                    <option value="ölümcül">Ölümcül</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label class="form-label">Notlar</label>
+                <textarea class="form-control" name="allergies[INDEX][notes]" rows="2"></textarea>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Kronik Hastalık Template -->
+<template id="diseaseTemplate">
+    <div class="disease-item border rounded p-3 mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="mb-0">Yeni Hastalık</h6>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-disease-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Hastalık Adı</label>
+                <input type="text" class="form-control" name="chronicDiseases[INDEX][name]">
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Tanı Tarihi</label>
+                <input type="date" class="form-control" name="chronicDiseases[INDEX][diagnosisDate]">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <label class="form-label">İlaçlar</label>
+                <input type="text" class="form-control" name="chronicDiseases[INDEX][medications]">
+                <div class="form-text">Birden fazla ilacı virgülle ayırarak yazabilirsiniz.</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label class="form-label">Notlar</label>
+                <textarea class="form-control" name="chronicDiseases[INDEX][notes]" rows="2"></textarea>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Avatar seçildiğinde adını göster
+    const avatarInput = document.getElementById('avatar');
+    const avatarName = document.getElementById('avatar-name');
+    
+    if (avatarInput && avatarName) {
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                avatarName.textContent = this.files[0].name;
+                
+                // Seçilen resmi önizle
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarPreview = document.querySelector('.avatar-preview');
+                    avatarPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">`;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+    
+    // Alerji ekle/kaldır işlevselliği
+    const addAllergyBtn = document.getElementById('addAllergyBtn');
+    const allergiesContainer = document.getElementById('allergiesContainer');
+    const allergyTemplate = document.getElementById('allergyTemplate');
+    
+    if (addAllergyBtn && allergiesContainer && allergyTemplate) {
+        // Mevcut alerji sayısını belirle
+        let allergyCount = document.querySelectorAll('.allergy-item').length;
+        
+        // Boş mesajı varsa temizle
+        addAllergyBtn.addEventListener('click', function() {
+            const emptyMessage = allergiesContainer.querySelector('p.text-muted');
+            if (emptyMessage) {
+                emptyMessage.parentElement.remove();
+            }
+            
+            // Yeni alerji ekle
+            const template = allergyTemplate.content.cloneNode(true);
+            const allInputs = template.querySelectorAll('select, input, textarea');
+            
+            // İndeksleri güncelle
+            allInputs.forEach(input => {
+                if (input.name) {
+                    input.name = input.name.replace('INDEX', allergyCount);
+                }
+            });
+            
+            allergiesContainer.appendChild(template);
+            allergyCount++;
+            
+            // Silme butonunu aktif et
+            const removeButtons = document.querySelectorAll('.remove-allergy-btn');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.allergy-item').remove();
+                    
+                    // Tüm alerjiler silindiyse boş mesajı göster
+                    if (document.querySelectorAll('.allergy-item').length === 0) {
+                        allergiesContainer.innerHTML = `
+                            <div class="text-center py-3">
+                                <p class="text-muted mb-0">Alerji bilgisi bulunamadı. Eklemek için "Alerji Ekle" butonunu kullanabilirsiniz.</p>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        });
+        
+        // Mevcut silme butonlarını aktif et
+        document.querySelectorAll('.remove-allergy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.allergy-item').remove();
+                
+                // Tüm alerjiler silindiyse boş mesajı göster
+                if (document.querySelectorAll('.allergy-item').length === 0) {
+                    allergiesContainer.innerHTML = `
+                        <div class="text-center py-3">
+                            <p class="text-muted mb-0">Alerji bilgisi bulunamadı. Eklemek için "Alerji Ekle" butonunu kullanabilirsiniz.</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+    }
+    
+    // Kronik hastalık ekle/kaldır işlevselliği
+    const addChronicDiseaseBtn = document.getElementById('addChronicDiseaseBtn');
+    const chronicDiseasesContainer = document.getElementById('chronicDiseasesContainer');
+    const diseaseTemplate = document.getElementById('diseaseTemplate');
+    
+    if (addChronicDiseaseBtn && chronicDiseasesContainer && diseaseTemplate) {
+        // Mevcut hastalık sayısını belirle
+        let diseaseCount = document.querySelectorAll('.disease-item').length;
+        
+        // Boş mesajı varsa temizle
+        addChronicDiseaseBtn.addEventListener('click', function() {
+            const emptyMessage = chronicDiseasesContainer.querySelector('p.text-muted');
+            if (emptyMessage) {
+                emptyMessage.parentElement.remove();
+            }
+            
+            // Yeni hastalık ekle
+            const template = diseaseTemplate.content.cloneNode(true);
+            const allInputs = template.querySelectorAll('select, input, textarea');
+            
+            // İndeksleri güncelle
+            allInputs.forEach(input => {
+                if (input.name) {
+                    input.name = input.name.replace('INDEX', diseaseCount);
+                }
+            });
+            
+            chronicDiseasesContainer.appendChild(template);
+            diseaseCount++;
+            
+            // Silme butonunu aktif et
+            const removeButtons = document.querySelectorAll('.remove-disease-btn');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.disease-item').remove();
+                    
+                    // Tüm hastalıklar silindiyse boş mesajı göster
+                    if (document.querySelectorAll('.disease-item').length === 0) {
+                        chronicDiseasesContainer.innerHTML = `
+                            <div class="text-center py-3">
+                                <p class="text-muted mb-0">Kronik hastalık bilgisi bulunamadı. Eklemek için "Hastalık Ekle" butonunu kullanabilirsiniz.</p>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        });
+        
+        // Mevcut silme butonlarını aktif et
+        document.querySelectorAll('.remove-disease-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.disease-item').remove();
+                    
+                    // Tüm hastalıklar silindiyse boş mesajı göster
+                    if (document.querySelectorAll('.disease-item').length === 0) {
+                        chronicDiseasesContainer.innerHTML = `
+                            <div class="text-center py-3">
+                                <p class="text-muted mb-0">Kronik hastalık bilgisi bulunamadı. Eklemek için "Hastalık Ekle" butonunu kullanabilirsiniz.</p>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        });
+    }
+});
+</script>
+
+<%- include('../partials/footer') %>

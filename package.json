@@ -1,6 +1,6 @@
 {
     "name": "asts",
-    "version": "1.0.0",
+    "version": "2.65.30",
     "description": "Aile Sağlık Takip Sistemi - MongoDB tabanlı bir Node.js web uygulaması",
     "main": "index.js",
     "scripts": {
